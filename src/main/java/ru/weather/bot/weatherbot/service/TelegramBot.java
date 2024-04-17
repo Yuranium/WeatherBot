@@ -116,6 +116,7 @@ public class TelegramBot extends TelegramLongPollingBot
                         executeMessage(newMessage, text);
                         botLanguage = BotLanguage.GERMAN;
                     }
+                    break;
                 default:
                     defaultCommand(chatId);
             }
