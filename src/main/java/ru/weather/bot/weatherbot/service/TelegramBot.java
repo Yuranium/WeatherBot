@@ -1,6 +1,7 @@
 package ru.weather.bot.weatherbot.service;
 
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -10,8 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.weather.bot.weatherbot.config.BotConfig;
-import ru.weather.bot.weatherbot.enums.BotLanguages;
+import ru.weather.bot.weatherbot.enums.BotCommand;
+import ru.weather.bot.weatherbot.enums.BotLanguage;
 import ru.weather.bot.weatherbot.models.BotModel;
+import ru.weather.bot.weatherbot.models.Messages;
 
 import java.util.List;
 
@@ -20,13 +23,15 @@ public class TelegramBot extends TelegramLongPollingBot
 {
     private final BotConfig botConfig;
 
-    private BotLanguages languages;
+    private BotLanguage botLanguage;
+    private BotCommand botCommand;
 
+    @Autowired
     public TelegramBot(BotConfig botConfig)
     {
         super(botConfig.getBotToken());
         this.botConfig = botConfig;
-        languages = BotLanguages.ENGLISH;
+        botLanguage = BotLanguage.ENGLISH;
     }
 
     @Override
@@ -47,9 +52,15 @@ public class TelegramBot extends TelegramLongPollingBot
             {
                 case "/start":
                     startCommand(chatId, update.getMessage().getChat().getFirstName());
+                    botCommand = BotCommand.START;
+                    break;
+                case "/help":
+                    helpCommand(chatId);
+                    botCommand = BotCommand.HELP;
                     break;
                 case "/lang":
                     langCommand(chatId);
+                    botCommand = BotCommand.LANG;
                     break;
                 default:
                     defaultCommand(chatId);
@@ -67,31 +78,49 @@ public class TelegramBot extends TelegramLongPollingBot
             switch (callbackData)
             {
                 case "RuLang":
-                    newMessage = "\uD83D\uDC4C Хорошо! Теперь дальнейшее общение будет на русском языке.\n\n" +
-                            "⚙ Чтобы изменить язык общения, выберите нужный с помощью команды: /lang";
-                    executeMessage(newMessage, text);
-                    languages = BotLanguages.RUSSIAN;
+                    if (botLanguage == BotLanguage.RUSSIAN)
+                        executeMessage(Messages.RU_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                    else
+                    {
+                        newMessage = Messages.RU_FURTHER_COMMUNICATION;
+                        executeMessage(newMessage, text);
+                        botLanguage = BotLanguage.RUSSIAN;
+                    }
                     break;
                 case "EnLang":
-                    newMessage = "\uD83D\uDC4C Good! Now further communication will be in English.\n\n" +
-                            "⚙ To change the language of communication, select the desired language with the command: /lang";
-                    executeMessage(newMessage, text);
-                    languages = BotLanguages.ENGLISH;
+                    if (botLanguage == BotLanguage.ENGLISH)
+                        executeMessage(Messages.EN_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                    else
+                    {
+                        newMessage = Messages.EN_FURTHER_COMMUNICATION;
+                        executeMessage(newMessage, text);
+                        botLanguage = BotLanguage.ENGLISH;
+                    }
                     break;
                 case "CnLang":
-                    newMessage = "\uD83D\uDC4C 很好！现在，我们将用德语进行进一步交流。\n\n⚙ 要更改通信语言，请使用 /lang 命令选择所需的语言。";
-                    executeMessage(newMessage, text);
-                    languages = BotLanguages.CHINESE;
+                    if (botLanguage == BotLanguage.CHINESE)
+                        executeMessage(Messages.CN_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                    else
+                    {
+                        newMessage = Messages.CN_FURTHER_COMMUNICATION;
+                        executeMessage(newMessage, text);
+                        botLanguage = BotLanguage.CHINESE;
+                    }
                     break;
                 case "DeLang":
-                    newMessage = "\uD83D\uDC4C Sehr gut! Nun wird die weitere Kommunikation auf Deutsch erfolgen.\n\n" +
-                            "⚙ Um die Sprache der Kommunikation zu ändern, wählen Sie die gewünschte Sprache mit dem Befehl: /lang";
-                    executeMessage(newMessage, text);
-                    languages = BotLanguages.GERMAN;
-                    break;
+                    if (botLanguage == BotLanguage.GERMAN)
+                        executeMessage(Messages.DE_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                    else
+                    {
+                        newMessage = Messages.DE_FURTHER_COMMUNICATION;
+                        executeMessage(newMessage, text);
+                        botLanguage = BotLanguage.GERMAN;
+                    }
                 default:
                     defaultCommand(chatId);
             }
+            if (botCommand.getCommand().equals("/start"))
+                helpCommand(chatId);
         }
     }
 
@@ -142,20 +171,36 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
+    public void helpCommand(long chatId)
+    {
+        String message = switch (botLanguage)
+        {
+            case RUSSIAN -> Messages.RU_HELP;
+            case ENGLISH -> Messages.EN_HELP;
+            case CHINESE -> Messages.CN_HELP;
+            case GERMAN -> Messages.DE_HELP;
+        };
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(message);
+        try
+        {
+            execute(sendMessage);
+        } catch (TelegramApiException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void langCommand(long chatId)
     {
-        String message = "\uD83C\uDF0D To change the language, select the desired language from the list of available languages." +
-                "All messages will then be in the selected language \uD83D\uDE09";
-        switch (languages)
+        String message = switch (botLanguage)
         {
-            case RUSSIAN -> message = "\uD83C\uDF0D Чтобы сменить язык, выберите необходимый из списка предложенных." +
-                    " После все сообщения будут на выбранном языке \uD83D\uDE09";
-            case ENGLISH -> message = "\uD83C\uDF0D To change the language, select the desired language from the list of available languages." +
-                    " All messages will then be in the selected language \uD83D\uDE09";
-            case CHINESE -> message = "\uD83C\uDF0D 要更改语言，请从可用语言列表中选择所需的语言。所有信息都将使用所选语言 \uD83D\uDE09";
-            case GERMAN -> message = "\uD83C\uDF0D Um die Sprache zu ändern, wählen Sie die gewünschte Sprache aus der" +
-                    "Liste der verfügbaren Sprachen aus. Alle Meldungen werden dann in der ausgewählten Sprache angezeigt \uD83D\uDE09";
-        }
+            case RUSSIAN -> Messages.SET_LANG_RU;
+            case ENGLISH -> Messages.SET_LANG_EN;
+            case CHINESE -> Messages.SET_LANG_CN;
+            case GERMAN -> Messages.SET_LANG_DE;
+        };
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(message);
@@ -175,14 +220,13 @@ public class TelegramBot extends TelegramLongPollingBot
 
     private void defaultCommand(long chatId)
     {
-        String message = "Sorry, this command is not supported at the moment.";
-        switch (languages)
+        String message = switch (botLanguage)
         {
-            case RUSSIAN -> message = "Извините, эта команда в данный момент не поддерживается.";
-            case ENGLISH -> message = "Sorry, this command is not supported at the moment.";
-            case CHINESE -> message = "抱歉，目前不支持该命令";
-            case GERMAN -> message = "Dieser Befehl wird zur Zeit leider nicht unterstützt.";
-        }
+            case RUSSIAN -> Messages.RU_UNSUPPORTED_COMMAND;
+            case ENGLISH -> Messages.EN_UNSUPPORTED_COMMAND;
+            case CHINESE -> Messages.CN_UNSUPPORTED_COMMAND;
+            case GERMAN -> Messages.DE_UNSUPPORTED_COMMAND;
+        };
         executeMessage(chatId, message);
     }
 }

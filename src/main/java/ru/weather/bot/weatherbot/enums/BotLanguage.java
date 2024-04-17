@@ -1,6 +1,6 @@
 package ru.weather.bot.weatherbot.enums;
 
-public enum BotLanguages
+public enum BotLanguage
 {
     RUSSIAN, ENGLISH, CHINESE, GERMAN
 }
