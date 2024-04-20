@@ -7,12 +7,19 @@ public interface Messages
     String CN_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ 语言已选择为中文。";
     String DE_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ Die Sprache ist bereits als Deutsch ausgewählt.";
     String RU_FURTHER_COMMUNICATION = "\uD83D\uDC4C Хорошо! Теперь дальнейшее общение будет на русском языке.\n\n" +
-        "⚙ Чтобы изменить язык общения, выберите нужный с помощью команды: /lang";
+        "⚙ Чтобы изменить язык общения, выберите нужный с помощью команды: /lang\n\n" +
+            "☀ Теперь Вы можете узнать погоду в любом городе, который существует на карте. " +
+            "Просто введите название города без ошибок (регистр букв не важен) \uD83D\uDE03";
     String EN_FURTHER_COMMUNICATION = "\uD83D\uDC4C Good! Now further communication will be in English.\n\n" +
-        "⚙ To change the language of communication, select the desired language with the command: /lang";
-    String CN_FURTHER_COMMUNICATION = "\uD83D\uDC4C 很好！现在，我们将用德语进行进一步交流。\n\n⚙ 要更改通信语言，请使用 /lang 命令选择所需的语言。";
+        "⚙ To change the language of communication, select the desired language with the command: /lang\n\n" +
+            "☀ Now you can find out the weather in any city that exists on the map. " +
+            "Just enter the name of the city without mistakes (case is not important) \uD83D\uDE03";
+    String CN_FURTHER_COMMUNICATION = "\uD83D\uDC4C 很好！现在，我们将用德语进行进一步交流。\n\n⚙ 要更改通信语言，请使用 /lang\n\n 命令选择所需的语言。" +
+            "☀ 现在，您可以查询地图上任何城市的天气情况。只需准确无误地输入城市名称（大小写并不重要）\uD83D\uDE03。";
     String DE_FURTHER_COMMUNICATION = "\uD83D\uDC4C Sehr gut! Nun wird die weitere Kommunikation auf Deutsch erfolgen.\n\n" +
-        "⚙ Um die Sprache der Kommunikation zu ändern, wählen Sie die gewünschte Sprache mit dem Befehl: /lang";
+        "⚙ Um die Sprache der Kommunikation zu ändern, wählen Sie die gewünschte Sprache mit dem Befehl: /lang\n\n" +
+            "☀ Jetzt können Sie das Wetter in jeder beliebigen Stadt, die auf der Karte existiert, herausfinden. " +
+            "Geben Sie einfach den Namen der Stadt ohne Fehler ein (Groß- und Kleinschreibung ist nicht wichtig) \uD83D\uDE03.";
     String RU_HELP = "Я предназначен для удобного информирования Вас о погодных условиях во всём мире! \uD83D\uDCE3\n" +
         "В мой функционал входит выполнение различных задач, например \uD83D\uDD00\n\n" +
         "\uD83D\uDD38 Для начала общения со мной, можно отправить команду: /start. ▶\n\n" +
@@ -47,8 +54,8 @@ public interface Messages
     String SET_LANG_CN = "\uD83C\uDF0D 要更改语言，请从可用语言列表中选择所需的语言。所有信息都将使用所选语言 \uD83D\uDE09";
     String SET_LANG_DE = "\uD83C\uDF0D Um die Sprache zu ändern, wählen Sie die gewünschte Sprache aus der" +
         "Liste der verfügbaren Sprachen aus. Alle Meldungen werden dann in der ausgewählten Sprache angezeigt \uD83D\uDE09";
-    String RU_UNSUPPORTED_COMMAND = "Извините, эта команда в данный момент не поддерживается.";
-    String EN_UNSUPPORTED_COMMAND = "Sorry, this command is not supported at the moment.";
-    String CN_UNSUPPORTED_COMMAND = "抱歉，目前不支持该命令";
-    String DE_UNSUPPORTED_COMMAND = "Dieser Befehl wird zur Zeit leider nicht unterstützt.";
+    String RU_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Извините, эта команда в данный момент не поддерживается или неправильный ввод.";
+    String EN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, this command is not currently supported or incorrect input.";
+    String CN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E 对不起，当前不支持此命令或输入不正确。";
+    String DE_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, dieser Befehl wird derzeit nicht unterstützt oder ist falsch eingegeben.";
 }

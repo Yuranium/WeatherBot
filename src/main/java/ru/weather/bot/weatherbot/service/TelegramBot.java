@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.weather.bot.weatherbot.config.BotConfig;
 import ru.weather.bot.weatherbot.enums.BotCommand;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
+import ru.weather.bot.weatherbot.json.WeatherMapper;
 import ru.weather.bot.weatherbot.models.BotModel;
 import ru.weather.bot.weatherbot.models.Messages;
 
@@ -22,15 +23,16 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot
 {
     private final BotConfig botConfig;
-
+    private final WeatherMapper weatherMapper;
     private BotLanguage botLanguage;
     private BotCommand botCommand;
 
     @Autowired
-    public TelegramBot(BotConfig botConfig)
+    public TelegramBot(BotConfig botConfig, WeatherMapper weatherMapper)
     {
         super(botConfig.getBotToken());
         this.botConfig = botConfig;
+        this.weatherMapper = weatherMapper;
         botLanguage = BotLanguage.ENGLISH;
     }
 
@@ -63,7 +65,9 @@ public class TelegramBot extends TelegramLongPollingBot
                     botCommand = BotCommand.LANG;
                     break;
                 default:
-                    defaultCommand(chatId);
+                    if (message.contains("/"))
+                        defaultCommand(chatId);
+                    else executeMessage(chatId,  weatherMapper.weatherDispatch(message, botLanguage));
             }
         } else if (update.hasCallbackQuery())
         {

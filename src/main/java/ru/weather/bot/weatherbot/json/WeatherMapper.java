@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.weather.bot.weatherbot.config.WeatherConfig;
+import ru.weather.bot.weatherbot.enums.BotLanguage;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -21,19 +22,13 @@ public class WeatherMapper
         this.weatherConfig = weatherConfig;
     }
 
-    public void start()
+    public String weatherDispatch(String cityName, BotLanguage language)
     {
-        try (Scanner scanner = new Scanner(System.in))
-        {
-            System.out.println("Введите город, погоду которого хотите узнать:");
-            String city = scanner.nextLine();
-            WeatherData weatherData;
-            weatherData = fetchWeather(city);
-            System.out.println("В городе " + convertCityNameCorrectly(city) + " " + weatherData.weather().get(0).description() + ", средняя температура на улице "
-                    + weatherData.main().temp() + "°C, ощущается как " + weatherData.main().feels_like() +
-                    "°C, облачность составляет " + weatherData.clouds().clouds() + "%, порывы ветра достигают " + weatherData.wind().speed() + " м/c.");
-            System.out.println(weatherData);
-        }
+        WeatherData weatherData = fetchWeather(cityName, language);
+        System.out.println(weatherData);
+        return "В городе " + convertCityNameCorrectly(cityName) + " " + weatherData.weather().get(0).description() + ", средняя температура на улице "
+                + weatherData.main().temp() + "°C, ощущается как " + weatherData.main().feels_like() +
+                "°C, облачность составляет " + weatherData.clouds().clouds() + "%, порывы ветра достигают " + weatherData.wind().speed() + " м/c.";
     }
 
     private String convertCityNameCorrectly(String str)
@@ -45,11 +40,11 @@ public class WeatherMapper
                 + str.substring(index + 2) : str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-    public WeatherData fetchWeather(String city)
+    private WeatherData fetchWeather(String city, BotLanguage language)
     {
         try
         {
-            String urlString = weatherConfig.getTemplateUrl().replace("{city name}", city).replace("{my lang}", "ru")
+            String urlString = weatherConfig.getTemplateUrl().replace("{city name}", city).replace("{my lang}", language.getRegion())
                     .replace("{units}", "metric").replace("{API key}", weatherConfig.getWeatherApiKey());
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
