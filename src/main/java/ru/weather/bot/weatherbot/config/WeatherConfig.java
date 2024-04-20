@@ -15,4 +15,11 @@ public class WeatherConfig
 
     @Value("${url.template}")
     private String templateUrl;
+
+    private String cityName;
+
+    public void setCityName(String cityName)
+    {
+        this.cityName = cityName;
+    }
 }

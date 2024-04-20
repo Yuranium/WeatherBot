@@ -49,9 +49,7 @@ record Main(
         double temp_min,
         double temp_max,
         double pressure,
-        double humidity,
-        double sea_level,
-        double grnd_level
+        double humidity
 )
 {
     @Override
@@ -63,8 +61,6 @@ record Main(
                 ", temp_max=" + temp_max +
                 ", pressure=" + pressure +
                 ", humidity=" + humidity +
-                ", sea_level=" + sea_level +
-                ", grnd_level=" + grnd_level +
                 '}';
     }
 }

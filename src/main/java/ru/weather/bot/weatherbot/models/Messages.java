@@ -58,4 +58,23 @@ public interface Messages
     String EN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, this command is not currently supported or incorrect input.";
     String CN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E 对不起，当前不支持此命令或输入不正确。";
     String DE_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, dieser Befehl wird derzeit nicht unterstützt oder ist falsch eingegeben.";
+    String RU_CITY_INPUT_ERROR = "❌ В ходе выполнения геокодирования введённого города, не было получено ни одного положительного ответа. " +
+            "Убедитесь, что введённый Вами город написан без ошибок и существует.\n\n" +
+            "Если это не помогло, возможно наблюдаются технические неполадки на стороне сервера, стоит повторить попытку позже.";
+    String EN_CITY_INPUT_ERROR = "❌ While performing the geocoding of the entered city, no positive responses were received. " +
+            "Make sure that the city you entered is not misspelled and exists.\n\n" +
+            "If this does not help, there may be technical problems on the server side, you should try again later.";
+    String CN_CITY_INPUT_ERROR = "❌ 对输入的城市进行地理编码时未收到肯定的回复。请确保您输入的城市没有拼写错误并且存在。\n\n" +
+            "如果没有帮助，可能是服务器方面的技术问题，请稍后再试。";
+    String DE_CITY_INPUT_ERROR = "❌ Bei der Geokodierung der eingegebenen Stadt wurden keine positiven Antworten erhalten. " +
+            "Stellen Sie sicher, dass die eingegebene Stadt nicht falsch geschrieben ist und existiert.\n\n" +
+            "Wenn dies nicht hilft, liegt möglicherweise ein technisches Problem auf der Serverseite vor, Sie sollten es später erneut versuchen.";
+    String RU_DETAILED_FORECAST = "Подробный прогноз";
+    String EN_DETAILED_FORECAST = "Detailed Forecast";
+    String CN_DETAILED_FORECAST = "详细预测";
+    String DE_DETAILED_FORECAST = "Detaillierte Vorhersage";
+    String RU_UNSUCCESSFUL_EVENT_HANDLING = "⚠ Время ожидания истекло, повторите запрос.";
+    String EN_UNSUCCESSFUL_EVENT_HANDLING = "⚠ Waiting time has expired, repeat the request.";
+    String CN_UNSUCCESSFUL_EVENT_HANDLING = "⚠ 等待时间已过，请重复请求。";
+    String DE_UNSUCCESSFUL_EVENT_HANDLING = "⚠ Die Wartezeit ist abgelaufen, wiederholen Sie die Anfrage.";
 }

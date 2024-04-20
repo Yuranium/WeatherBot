@@ -67,12 +67,30 @@ public class TelegramBot extends TelegramLongPollingBot
                 default:
                     if (message.contains("/"))
                         defaultCommand(chatId);
-                    else executeMessage(chatId,  weatherMapper.weatherDispatch(message, botLanguage));
+                    else
+                    {
+                        String weather = weatherMapper.weatherDispatch(message, botLanguage);
+                        if (weather == null || weather.isEmpty())
+                        {
+                            executeMessage(chatId, switch (botLanguage)
+                            {
+                                case RUSSIAN -> Messages.RU_CITY_INPUT_ERROR;
+                                case ENGLISH -> Messages.EN_CITY_INPUT_ERROR;
+                                case CHINESE -> Messages.CN_CITY_INPUT_ERROR;
+                                case GERMAN -> Messages.DE_CITY_INPUT_ERROR;
+                            });
+                        } else
+                        {
+                            weatherMapper.getWeatherConfig().setCityName(message);
+                            sendMessageWithScreenButton(chatId, weather);
+                        }
+                    }
             }
         } else if (update.hasCallbackQuery())
         {
             String newMessage;
             String callbackData = update.getCallbackQuery().getData();
+            System.out.println(callbackData);
             Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
@@ -121,10 +139,22 @@ public class TelegramBot extends TelegramLongPollingBot
                         botLanguage = BotLanguage.GERMAN;
                     }
                     break;
+                case "DetailedWeather":
+                    String message = weatherMapper.getWeatherConfig().getCityName();
+                    if (message == null || message.isEmpty())
+                        executeMessage(chatId, switch (botLanguage)
+                        {
+                            case RUSSIAN -> Messages.RU_UNSUCCESSFUL_EVENT_HANDLING;
+                            case ENGLISH -> Messages.EN_UNSUCCESSFUL_EVENT_HANDLING;
+                            case CHINESE -> Messages.CN_UNSUCCESSFUL_EVENT_HANDLING;
+                            case GERMAN -> Messages.DE_UNSUCCESSFUL_EVENT_HANDLING;
+                        });
+                    else executeMessage(weatherMapper.detailedWeatherForecast(message, botLanguage), text);
+                    return;
                 default:
                     defaultCommand(chatId);
             }
-            if (botCommand.getCommand().equals("/start"))
+            if (botCommand.getCommand().equals(BotCommand.START.getCommand()))
                 helpCommand(chatId);
         }
     }
@@ -146,6 +176,25 @@ public class TelegramBot extends TelegramLongPollingBot
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(text);
+        try
+        {
+            execute(sendMessage);
+        } catch (TelegramApiException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMessageWithScreenButton(long chatId, String text)
+    {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(text);
+
+        var markup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = BotModel.getButtonForDetailedWeather(botLanguage);
+        markup.setKeyboard(rows);
+        sendMessage.setReplyMarkup(markup);
         try
         {
             execute(sendMessage);

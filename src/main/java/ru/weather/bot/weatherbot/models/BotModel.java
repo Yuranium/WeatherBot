@@ -1,6 +1,7 @@
 package ru.weather.bot.weatherbot.models;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.weather.bot.weatherbot.enums.BotLanguage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,24 @@ public class BotModel
 
         rows.add(row1);
         rows.add(row2);
+        return rows;
+    }
+
+    public static List<List<InlineKeyboardButton>> getButtonForDetailedWeather(BotLanguage language)
+    {
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        var detailedForecast = new InlineKeyboardButton();
+        detailedForecast.setText(switch (language)
+        {
+            case RUSSIAN -> Messages.RU_DETAILED_FORECAST;
+            case ENGLISH -> Messages.EN_DETAILED_FORECAST;
+            case CHINESE -> Messages.CN_DETAILED_FORECAST;
+            case GERMAN -> Messages.DE_DETAILED_FORECAST;
+        });
+        detailedForecast.setCallbackData("DetailedWeather");
+        row.add(detailedForecast);
+        rows.add(row);
         return rows;
     }
 }
