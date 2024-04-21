@@ -2,6 +2,7 @@ package ru.weather.bot.weatherbot.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.weather.bot.weatherbot.enums.BotLanguage;
 
 import java.util.List;
 
@@ -72,24 +73,72 @@ record Wind(
         double gust
 )
 {
-    public String windGustFinding()
+    public String windGustFinding(BotLanguage language)
     {
         if ((deg <= 360 && deg >= 350) || (deg <= 10 && deg >= 0))
-            return "Северное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Северное";
+                case ENGLISH -> "North";
+                case CHINESE -> "北方向";
+                case GERMAN -> "Norden";
+            };
         if (deg <= 100 && deg >= 80)
-            return "Восточное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Восточное";
+                case ENGLISH -> "Eastern";
+                case CHINESE -> "东向";
+                case GERMAN -> "Osten";
+            };
         if (deg <= 190 && deg >= 170)
-            return "Южное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Южное";
+                case ENGLISH -> "South";
+                case CHINESE -> "南向";
+                case GERMAN -> "Süden";
+            };
         if (deg <= 280 && deg >= 260)
-            return "Западное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Западное";
+                case ENGLISH -> "Western";
+                case CHINESE -> "西部方向";
+                case GERMAN -> "Richtung";
+            };
         if (deg > 10 && deg < 80)
-            return "Северо-восточное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Северо-восточное";
+                case ENGLISH -> "Northeast";
+                case CHINESE -> "西部方向";
+                case GERMAN -> "Nord-Ost";
+            };
         if (deg > 100 && deg < 170)
-            return "Юго-восточное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Юго-восточное";
+                case ENGLISH -> "Southeast";
+                case CHINESE -> "西部方向";
+                case GERMAN -> "Süd-Ost";
+            };
         if (deg > 190 && deg < 260)
-            return "Юго-западное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Юго-западное";
+                case ENGLISH -> "Southwest";
+                case CHINESE -> "西部方向";
+                case GERMAN -> "Südwesten";
+            };
         if (deg > 280 && deg < 350)
-            return "Северо-западное направление ветра";
+            return switch (language)
+            {
+                case RUSSIAN -> "Северо-западное";
+                case ENGLISH -> "Northwest";
+                case CHINESE -> "西部方向";
+                case GERMAN -> "Nordwesten";
+            };
         else throw new IllegalArgumentException("Invalid value of the 'deg' variable. The range of this variable is {0, 360}");
     }
 

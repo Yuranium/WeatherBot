@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -69,7 +70,7 @@ public class TelegramBot extends TelegramLongPollingBot
                         defaultCommand(chatId);
                     else
                     {
-                        String weather = weatherMapper.weatherDispatch(message, botLanguage);
+                        String weather = weatherMapper.weatherDispatch(message.toLowerCase(), botLanguage);
                         if (weather == null || weather.isEmpty())
                         {
                             executeMessage(chatId, switch (botLanguage)
@@ -82,7 +83,7 @@ public class TelegramBot extends TelegramLongPollingBot
                         } else
                         {
                             botConfig.setMessageId(update.getMessage().getMessageId() + 1);
-                            weatherMapper.getWeatherConfig().setCityName(message);
+                            weatherMapper.getWeatherConfig().setCityName(message.toLowerCase());
                             sendMessageWithScreenButton(chatId, weather);
                         }
                     }
@@ -148,15 +149,15 @@ public class TelegramBot extends TelegramLongPollingBot
                         case CHINESE -> Messages.CN_UNSUCCESSFUL_EVENT_HANDLING;
                         case GERMAN -> Messages.DE_UNSUCCESSFUL_EVENT_HANDLING;
                     };
-                    if (messageId.intValue() != botConfig.getMessageId().intValue() ||
-                            (message == null || message.isEmpty()))
+                    if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (message == null || message.isEmpty())))
                         executeMessage(chatId, unsuccessfulEvent);
                     else executeMessage(weatherMapper.detailedWeatherForecast(message, botLanguage), text);
                     return;
                 default:
                     defaultCommand(chatId);
             }
-            if (botCommand.getCommand().equals(BotCommand.START.getCommand()))
+            if (botCommand != null && botCommand.getCommand().equals(BotCommand.START.getCommand()))
                 helpCommand(chatId);
         }
     }
@@ -164,6 +165,7 @@ public class TelegramBot extends TelegramLongPollingBot
     private void executeMessage(String text, @NotNull EditMessageText messageText)
     {
         messageText.setText(text);
+        messageText.setParseMode(ParseMode.HTML);
         try
         {
             execute(messageText);
@@ -178,6 +180,7 @@ public class TelegramBot extends TelegramLongPollingBot
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(text);
+        sendMessage.setParseMode(ParseMode.HTML);
         try
         {
             execute(sendMessage);
@@ -192,6 +195,7 @@ public class TelegramBot extends TelegramLongPollingBot
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(text);
+        sendMessage.setParseMode(ParseMode.HTML);
 
         var markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = BotModel.getButtonForDetailedWeather(botLanguage);
