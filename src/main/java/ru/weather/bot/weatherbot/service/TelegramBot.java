@@ -81,6 +81,7 @@ public class TelegramBot extends TelegramLongPollingBot
                             });
                         } else
                         {
+                            botConfig.setMessageId(update.getMessage().getMessageId() + 1);
                             weatherMapper.getWeatherConfig().setCityName(message);
                             sendMessageWithScreenButton(chatId, weather);
                         }
@@ -90,7 +91,6 @@ public class TelegramBot extends TelegramLongPollingBot
         {
             String newMessage;
             String callbackData = update.getCallbackQuery().getData();
-            System.out.println(callbackData);
             Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
@@ -141,14 +141,16 @@ public class TelegramBot extends TelegramLongPollingBot
                     break;
                 case "DetailedWeather":
                     String message = weatherMapper.getWeatherConfig().getCityName();
-                    if (message == null || message.isEmpty())
-                        executeMessage(chatId, switch (botLanguage)
-                        {
-                            case RUSSIAN -> Messages.RU_UNSUCCESSFUL_EVENT_HANDLING;
-                            case ENGLISH -> Messages.EN_UNSUCCESSFUL_EVENT_HANDLING;
-                            case CHINESE -> Messages.CN_UNSUCCESSFUL_EVENT_HANDLING;
-                            case GERMAN -> Messages.DE_UNSUCCESSFUL_EVENT_HANDLING;
-                        });
+                    String unsuccessfulEvent = switch (botLanguage)
+                    {
+                        case RUSSIAN -> Messages.RU_UNSUCCESSFUL_EVENT_HANDLING;
+                        case ENGLISH -> Messages.EN_UNSUCCESSFUL_EVENT_HANDLING;
+                        case CHINESE -> Messages.CN_UNSUCCESSFUL_EVENT_HANDLING;
+                        case GERMAN -> Messages.DE_UNSUCCESSFUL_EVENT_HANDLING;
+                    };
+                    if (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (message == null || message.isEmpty()))
+                        executeMessage(chatId, unsuccessfulEvent);
                     else executeMessage(weatherMapper.detailedWeatherForecast(message, botLanguage), text);
                     return;
                 default:
