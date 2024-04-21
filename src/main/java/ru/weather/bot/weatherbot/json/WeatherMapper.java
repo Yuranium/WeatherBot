@@ -18,6 +18,8 @@ public class WeatherMapper
 {
     private final WeatherConfig weatherConfig;
 
+    private WeatherData weatherData;
+
     @Autowired
     public WeatherMapper(WeatherConfig weatherConfig)
     {
@@ -26,8 +28,7 @@ public class WeatherMapper
 
     public String weatherDispatch(String cityName, BotLanguage language)
     {
-        WeatherData weatherData = fetchWeather(cityName, language);
-        System.out.println(weatherData);
+        weatherData = fetchWeather(cityName, language);
 
         return (weatherData == null) ? null : switch (language)
         {
@@ -49,9 +50,61 @@ public class WeatherMapper
 
     public String detailedWeatherForecast(String cityName, BotLanguage language)
     {
-        WeatherData weatherData = fetchWeather(cityName, language);
-
-        return weatherData.toString();
+        return (weatherData == null) ? null : switch (language)
+        {
+            case RUSSIAN -> "\uD83C\uDFD9 Хорошо! Более <b>подробный прогноз погоды</b> в регионе <b>" + convertCityNameCorrectly(cityName) +
+                    "</b> сейчас:\n\n\uD83C\uDF26 Описание: <b>" + weatherData.weather().get(0).description() + "</b>" +
+                    "\n\n\uD83C\uDF21 Средняя температура: <b>" + weatherData.main().temp() + "°C</b>" +
+                    "\n\n\uD83D\uDC64 Ощущается как: <b>" + weatherData.main().feels_like() + "°C</b>" +
+                    "\n\n\uD83E\uDDCA Минимальная температура: <b>" + weatherData.main().temp_min() + "°C</b>" +
+                    "\n\n\uD83D\uDD25 Максимальная температура: <b>" + weatherData.main().temp_max() + "°C</b>" +
+                    "\n\n\uD83D\uDDDC Давление: <b>" + weatherData.main().pressure() + " мм рт. ст.</b>" +
+                    "\n\n\uD83D\uDCA6 Влажность: <b>" + weatherData.main().humidity() + "%</b>" +
+                    "\n\n\uD83D\uDD2D Видимость: <b>" + (weatherData.visibility() / 1000D) + "км</b>" +
+                    "\n\n\uD83D\uDCA8 Скорость ветра: <b>" + weatherData.wind().speed() + "м/c</b>" +
+                    "\n\n\uD83C\uDF2C Порывы ветра (кратковременное усиление ветра): <b>" + weatherData.wind().gust() + "м/с</b>" +
+                    "\n\n\uD83E\uDDED Направление ветра: <b>" + weatherData.wind().windGustFinding(language) + "</b>" +
+                    "\n\n☁ Облачность неба: <b>" + weatherData.clouds().clouds() + "%</b>";
+            case ENGLISH -> "\uD83C\uDFD9 Good! More <b>detailed weather forecast</b> for the region <b>" + convertCityNameCorrectly(cityName) + "</b> now:" +
+                    "\n\n\uD83C\uDF26 Description: <b>" + weatherData.weather().get(0).description() + "</b>" +
+                    "\n\n\uD83C\uDF21 Average temperature: <b>" + weatherData.main().temp() + "°C</b>" +
+                    "\n\n\uD83D\uDC64 Feels like: <b>" + weatherData.main().feels_like() + "°C</b>" +
+                    "\n\n\uD83E\uDDCA Minimum temperature: <b>" + weatherData.main().temp_min() + "°C</b>" +
+                    "\n\n\uD83D\uDD25 Maximum temperature: <b>" + weatherData.main().temp_max() + "°C</b>" +
+                    "\n\n\uD83D\uDDDC Pressure: <b>" + weatherData.main().pressure() + " mmHg</b>" +
+                    "\n\n\uD83D\uDCA6 Humidity: <b>" + weatherData.main().humidity() + "%</b>" +
+                    "\n\n\uD83D\uDD2D Visibility: <b>" + (weatherData.visibility() / 1000D) + "km</b>" +
+                    "\n\n\uD83D\uDCA8 Wind speed: <b>" + weatherData.wind().speed() + "m/sec</b>" +
+                    "\n\n\uD83C\uDF2C Wind gusts (short-term wind strengthening): <b>" + weatherData.wind().gust() + "m/sec</b>" +
+                    "\n\n\uD83E\uDDED Wind direction: <b>" + weatherData.wind().windGustFinding(language) + "</b>" +
+                    "\n\n☁ Sky cloudiness: <b>" + weatherData.clouds().clouds() + "%</b>";
+            case CHINESE -> "\uD83C\uDFD9 好! 该地区更详细的天气预报 <b>" + convertCityNameCorrectly(cityName) + "</b> 现在：" +
+                    "\n\n\uD83C\uDF26 描述： <b>" + weatherData.weather().get(0).description() + "</b>" +
+                    "\n\n\uD83C\uDF21 平均气温： <b>" + weatherData.main().temp() + "°C</b>" +
+                    "\n\n\uD83D\uDC64 感觉： <b>" + weatherData.main().feels_like() + "°C</b>" +
+                    "\n\n\uD83E\uDDCA 最低气温： <b>" + weatherData.main().temp_min() + "°C</b>" +
+                    "\n\n\uD83D\uDD25 最高气温： <b>" + weatherData.main().temp_max() + "°C</b>" +
+                    "\n\n\uD83D\uDDDC 气压： <b>" + weatherData.main().pressure() + " mmHg。</b>" +
+                    "\n\n\uD83D\uDCA6 湿度： <b>" + weatherData.main().humidity() + "%</b>" +
+                    "\n\n\uD83D\uDD2D 能见度： <b>" + (weatherData.visibility() / 1000D) + "公里</b>" +
+                    "\n\n\uD83D\uDCA8 风速： <b>" + weatherData.wind().speed() + "米/秒。</b>" +
+                    "\n\n\uD83C\uDF2C 阵风（短期风力增强）： <b>" + weatherData.wind().gust() + "米/秒。</b>" +
+                    "\n\n\uD83E\uDDED 风向： <b>" + weatherData.wind().windGustFinding(language) + "</b>" +
+                    "\n\n☁ 天空云量： <b>" + weatherData.clouds().clouds() + "%</b>";
+            case GERMAN -> "\uD83C\uDFD9 Gut! <b>Ausführlichere Wettervorhersage</b> für die Region <b>" + convertCityNameCorrectly(cityName) + "</b> jetzt:" +
+                    "\n\n\uD83C\uDF26 Beschreibung: <b>" + weatherData.weather().get(0).description() + "</b>" +
+                    "\n\n\uD83C\uDF21 Durchschnittliche Temperatur: <b>" + weatherData.main().temp() + "°C</b>" +
+                    "\n\n\uD83D\uDC64 Fühlt sich an wie: <b>" + weatherData.main().feels_like() + "°C</b>" +
+                    "\n\n\uD83E\uDDCA Tiefsttemperatur: <b>" + weatherData.main().temp_min() + "°C</b>" +
+                    "\n\n\uD83D\uDD25 Höchsttemperatur: <b>" + weatherData.main().temp_max() + "°C</b>" +
+                    "\n\n\uD83D\uDDDC Luftdruck: <b>" + weatherData.main().pressure() + " mmHg</b>" +
+                    "\n\n\uD83D\uDCA6 Luftfeuchtigkeit: <b>" + weatherData.main().humidity() + "%</b>" +
+                    "\n\n\uD83D\uDD2D Sichtweite: <b>" + (weatherData.visibility() / 1000D) + "km</b>" +
+                    "\n\n\uD83D\uDCA8 Windgeschwindigkeit: <b>" + weatherData.wind().speed() + "m/sec</b>" +
+                    "\n\n\uD83C\uDF2C Windböen (kurzfristige Windverstärkung): <b>" + weatherData.wind().gust() + "m/sec</b>" +
+                    "\n\n\uD83E\uDDED Windrichtung: <b>" + weatherData.wind().windGustFinding(language) + "</b>" +
+                    "\n\n☁ Bewölkungsgrad: <b>" + weatherData.clouds().clouds() + "%</b>";
+        };
     }
 
     private String convertCityNameCorrectly(String str)
@@ -91,7 +144,7 @@ public class WeatherMapper
             } else
             {
                 return null;
-                //throw new RuntimeException("HTTP Response Code: " + responseCode); // Добавить возврат null сюда, если город не найден
+                // throw new RuntimeException("HTTP Response Code: " + responseCode);
             }
         } catch (IOException exc)
         {
