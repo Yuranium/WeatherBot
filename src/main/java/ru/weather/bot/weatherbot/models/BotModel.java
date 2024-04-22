@@ -1,5 +1,6 @@
 package ru.weather.bot.weatherbot.models;
 
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
 
@@ -55,5 +56,14 @@ public class BotModel
         row.add(detailedForecast);
         rows.add(row);
         return rows;
+    }
+
+    public static List<BotCommand> commandListForBotMenu()
+    {
+        List<BotCommand> commandList = new ArrayList<>();
+        commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.START.getCommand(), Messages.START_COMMAND_DESCRIPTION));
+        commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.HELP.getCommand(), Messages.HELP_COMMAND_DESCRIPTION));
+        commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.LANG.getCommand(), Messages.LANG_COMMAND_DESCRIPTION));
+        return commandList;
     }
 }

@@ -1,7 +1,84 @@
 package ru.weather.bot.weatherbot.models;
 
+import ru.weather.bot.weatherbot.enums.BotLanguage;
+
 public interface Messages
 {
+    static String weatherForecast(BotLanguage language, String cityName, String description, double temp, double feels_like, int clouds, double speed)
+    {
+        return switch (language)
+        {
+            case RUSSIAN -> "\uD83C\uDFD9\uFE0F В городе " + cityName + " " + description + ", \uD83C\uDF21\uFE0F средняя температура на улице " + temp +
+                    "°C, ощущается как " + feels_like + "°C, ☁ облачность составляет " + clouds + "%, \uD83D\uDCA8 скорость ветра достигает " + speed + " м/c.";
+            case ENGLISH -> "\uD83C\uDFD9\uFE0F In the city of " + cityName + " " + description + ", \uD83C\uDF21\uFE0F the average temperature outside is " +
+                    temp + "°C, feels like " +  feels_like + "°C, ☁ cloudiness is " + clouds + "%, \uD83D\uDCA8 wind speeds up to " + speed + " m/s.";
+            case CHINESE -> "\uD83C\uDFD9\uFE0F 在" + cityName + description + "城市，\uD83C\uDF21\uFE0F，室外平均气温为 " + temp + "℃，感觉温度为" + feels_like +
+                    "℃，☁ ，云量为 " + clouds + "，\uD83D\uDCA8 风速达到 " + speed + " 米/秒。";
+            case GERMAN -> "\uD83C\uDFD9\uFE0F In der Stadt " + cityName + " " +  description + ", \uD83C\uDF21\uFE0F beträgt die durchschnittliche Außentemperatur " +
+                    temp + "°C, gefühlt " + feels_like + "°C, ☁ beträgt die Bewölkung " + clouds + "%, \uD83D\uDCA8 windgeschwindigkeiten bis zu " + speed + " m/s.";
+        };
+    }
+
+    static String detailedWeatherForecast(BotLanguage language, String cityName, String description, double temp, double feels_like,
+                                          double temp_min, double temp_max, double pressure, double humidity, double visibility, double speed,
+                                          double gust, String windDirection, int clouds)
+    {
+        return switch (language)
+        {
+            case RUSSIAN -> "\uD83C\uDFD9 Хорошо! Более <b>подробный прогноз погоды</b> в регионе <b>" + cityName +
+                    "</b> сейчас:\n\n\uD83C\uDF26 Описание: <b>" + description + "</b>" +
+                    "\n\n\uD83C\uDF21 Средняя температура: <b>" + temp + "°C</b>" +
+                    "\n\n\uD83D\uDC64 Ощущается как: <b>" + feels_like + "°C</b>" +
+                    "\n\n\uD83E\uDDCA Минимальная температура: <b>" + temp_min + "°C</b>" +
+                    "\n\n\uD83D\uDD25 Максимальная температура: <b>" + temp_max + "°C</b>" +
+                    "\n\n\uD83D\uDDDC Давление: <b>" + pressure + " мм рт. ст.</b>" +
+                    "\n\n\uD83D\uDCA6 Влажность: <b>" + humidity + "%</b>" +
+                    "\n\n\uD83D\uDD2D Видимость: <b>" + visibility + "км</b>" +
+                    "\n\n\uD83D\uDCA8 Скорость ветра: <b>" + speed + "м/c</b>" +
+                    "\n\n\uD83C\uDF2C Порывы ветра (кратковременное усиление ветра): <b>" + gust + "м/с</b>" +
+                    "\n\n\uD83E\uDDED Направление ветра: <b>" + windDirection + "</b>" +
+                    "\n\n☁ Облачность неба: <b>" + clouds + "%</b>";
+            case ENGLISH -> "\uD83C\uDFD9 Good! More <b>detailed weather forecast</b> for the region <b>" + cityName + "</b> now:" +
+                    "\n\n\uD83C\uDF26 Description: <b>" + description + "</b>" +
+                    "\n\n\uD83C\uDF21 Average temperature: <b>" + temp + "°C</b>" +
+                    "\n\n\uD83D\uDC64 Feels like: <b>" + feels_like + "°C</b>" +
+                    "\n\n\uD83E\uDDCA Minimum temperature: <b>" + temp_min + "°C</b>" +
+                    "\n\n\uD83D\uDD25 Maximum temperature: <b>" + temp_max + "°C</b>" +
+                    "\n\n\uD83D\uDDDC Pressure: <b>" + pressure + " mmHg</b>" +
+                    "\n\n\uD83D\uDCA6 Humidity: <b>" + humidity + "%</b>" +
+                    "\n\n\uD83D\uDD2D Visibility: <b>" + visibility + "km</b>" +
+                    "\n\n\uD83D\uDCA8 Wind speed: <b>" + speed + "m/sec</b>" +
+                    "\n\n\uD83C\uDF2C Wind gusts (short-term wind strengthening): <b>" + gust + "m/sec</b>" +
+                    "\n\n\uD83E\uDDED Wind direction: <b>" + windDirection + "</b>" +
+                    "\n\n☁ Sky cloudiness: <b>" + clouds + "%</b>";
+            case CHINESE -> "\uD83C\uDFD9 好! 该地区更详细的天气预报 <b>" + cityName + "</b> 现在：" +
+                    "\n\n\uD83C\uDF26 描述： <b>" + description + "</b>" +
+                    "\n\n\uD83C\uDF21 平均气温： <b>" + temp + "°C</b>" +
+                    "\n\n\uD83D\uDC64 感觉： <b>" + feels_like + "°C</b>" +
+                    "\n\n\uD83E\uDDCA 最低气温： <b>" + temp_min + "°C</b>" +
+                    "\n\n\uD83D\uDD25 最高气温： <b>" + temp_max + "°C</b>" +
+                    "\n\n\uD83D\uDDDC 气压： <b>" + pressure + " mmHg。</b>" +
+                    "\n\n\uD83D\uDCA6 湿度： <b>" + humidity + "%</b>" +
+                    "\n\n\uD83D\uDD2D 能见度： <b>" + visibility + "公里</b>" +
+                    "\n\n\uD83D\uDCA8 风速： <b>" + speed + "米/秒。</b>" +
+                    "\n\n\uD83C\uDF2C 阵风（短期风力增强）： <b>" + gust + "米/秒。</b>" +
+                    "\n\n\uD83E\uDDED 风向： <b>" + windDirection + "</b>" +
+                    "\n\n☁ 天空云量： <b>" + clouds + "%</b>";
+            case GERMAN -> "\uD83C\uDFD9 Gut! <b>Ausführlichere Wettervorhersage</b> für die Region <b>" + cityName + "</b> jetzt:" +
+                    "\n\n\uD83C\uDF26 Beschreibung: <b>" + description + "</b>" +
+                    "\n\n\uD83C\uDF21 Durchschnittliche Temperatur: <b>" + temp + "°C</b>" +
+                    "\n\n\uD83D\uDC64 Fühlt sich an wie: <b>" + feels_like + "°C</b>" +
+                    "\n\n\uD83E\uDDCA Tiefsttemperatur: <b>" + temp_min + "°C</b>" +
+                    "\n\n\uD83D\uDD25 Höchsttemperatur: <b>" + temp_max + "°C</b>" +
+                    "\n\n\uD83D\uDDDC Luftdruck: <b>" + pressure + " mmHg</b>" +
+                    "\n\n\uD83D\uDCA6 Luftfeuchtigkeit: <b>" + humidity + "%</b>" +
+                    "\n\n\uD83D\uDD2D Sichtweite: <b>" + visibility + "km</b>" +
+                    "\n\n\uD83D\uDCA8 Windgeschwindigkeit: <b>" + speed + "m/sec</b>" +
+                    "\n\n\uD83C\uDF2C Windböen (kurzfristige Windverstärkung): <b>" + gust + "m/sec</b>" +
+                    "\n\n\uD83E\uDDED Windrichtung: <b>" + windDirection + "</b>" +
+                    "\n\n☁ Bewölkungsgrad: <b>" + clouds + "%</b>";
+        };
+    }
     String RU_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ Язык уже выбран как русский.";
     String EN_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ The language is already selected as English.";
     String CN_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ 语言已选择为中文。";
@@ -77,4 +154,7 @@ public interface Messages
     String EN_UNSUCCESSFUL_EVENT_HANDLING = "⚠ Waiting time has expired, repeat the request.";
     String CN_UNSUCCESSFUL_EVENT_HANDLING = "⚠ 等待时间已过，请重复请求。";
     String DE_UNSUCCESSFUL_EVENT_HANDLING = "⚠ Die Wartezeit ist abgelaufen, wiederholen Sie die Anfrage.";
+    String START_COMMAND_DESCRIPTION = "Initial command to start the bot";
+    String HELP_COMMAND_DESCRIPTION = "Allows you to get a brief overview of the possibilities";
+    String LANG_COMMAND_DESCRIPTION = "Allows you to change the language of communication with the bot";
 }
