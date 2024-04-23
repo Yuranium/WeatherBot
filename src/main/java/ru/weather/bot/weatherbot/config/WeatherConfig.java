@@ -13,8 +13,11 @@ public class WeatherConfig
     @Value("${weather.api.key}")
     private String weatherApiKey;
 
-    @Value("${url.template}")
-    private String templateUrl;
+    @Value("${weather.url.template}")
+    private String weatherTemplateUrl;
+
+    @Value("${weather-forecast.url.template}")
+    private String forecastTemplateUrl;
 
     private String cityName;
 

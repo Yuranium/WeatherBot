@@ -53,11 +53,26 @@ public class WeatherMapper
                 + str.substring(index + 2) : str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+//    public static String isValidWeatherInput(String message)
+//    {
+//        if (message.matches("^.*\\s\\d{1,2}$"))
+//        {
+//            int index = 0;
+//            while (message.charAt(index) != ' ')
+//                index++;
+//            return message.substring(index + 1);
+//        }
+//        else
+//        {
+//            return null;
+//        }
+//    }
+
     private WeatherData fetchWeather(String city, BotLanguage language)
     {
         try
         {
-            String urlString = weatherConfig.getTemplateUrl().replace("{city name}", city).replace("{my lang}", language.getRegion())
+            String urlString = weatherConfig.getWeatherTemplateUrl().replace("{city name}", city).replace("{my lang}", language.getRegion())
                     .replace("{units}", "metric").replace("{API key}", weatherConfig.getWeatherApiKey());
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -89,4 +104,40 @@ public class WeatherMapper
         }
         return null;
     }
+
+//    private WeatherForecast fetchWeatherForecast(String city, BotLanguage language)
+//    {
+//        try
+//        {
+//            String urlString = weatherConfig.getWeatherTemplateUrl().replace("{city name}", city).replace("{my lang}", language.getRegion())
+//                    .replace("{units}", "metric").replace("{API key}", weatherConfig.getWeatherApiKey());
+//            URL url = new URL(urlString);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setRequestMethod("GET");
+//            connection.connect();
+//
+//            // Получение ответа
+//            int responseCode = connection.getResponseCode();
+//            if (responseCode == HttpURLConnection.HTTP_OK) {
+//                // Чтение ответа
+//                StringBuilder response = new StringBuilder();
+//                try (Scanner scanner = new Scanner(connection.getInputStream()))
+//                {
+//                    while (scanner.hasNextLine())
+//                        response.append(scanner.nextLine());
+//                }
+//
+//                // Преобразование JSON в объект WeatherData с помощью Jackson
+//                ObjectMapper mapper = new ObjectMapper();
+//                return mapper.readValue(response.toString(), WeatherForecast.class);
+//            } else
+//            {
+//                return null;
+//                // throw new RuntimeException("HTTP Response Code: " + responseCode);
+//            }
+//        } catch (IOException exc)
+//        {
+//            exc.printStackTrace();
+//        }
+//        return null;
 }

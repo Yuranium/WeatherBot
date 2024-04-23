@@ -2,4 +2,5 @@ spring.application.name=
 bot.name=
 bot.token=
 weather.api.key=
-url.template=
+weather.url.template=
+weather.forecast.url.template=
