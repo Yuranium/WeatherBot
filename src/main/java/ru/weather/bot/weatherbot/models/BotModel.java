@@ -66,4 +66,24 @@ public class BotModel
         commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.LANG.getCommand(), Messages.LANG_COMMAND_DESCRIPTION));
         return commandList;
     }
+
+    public static List<List<InlineKeyboardButton>> getButtonsForecastWeather(int countDays)
+    {
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        for (int i = 0; i < countDays; i++)
+        {
+            InlineKeyboardButton button = new InlineKeyboardButton();
+            button.setText(String.valueOf(i + 1));
+            button.setCallbackData("WF_" + (i + 1));
+            row.add(button);
+            if ((i + 1) % 4 == 0)
+            {
+                rows.add(row);
+                row = new ArrayList<>();
+            }
+        }
+        rows.add(row);
+        return rows;
+    }
 }
