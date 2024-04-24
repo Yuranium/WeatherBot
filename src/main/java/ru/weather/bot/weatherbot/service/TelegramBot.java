@@ -1,5 +1,6 @@
 package ru.weather.bot.weatherbot.service;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -182,6 +183,10 @@ public class TelegramBot extends TelegramLongPollingBot
                         executeMessage(chatId, unsuccessfulEvent);
                     else executeMessage(weatherMapper.detailedWeather(message, botLanguage), text);
                     return;
+                case "WF_1":
+                    String cityName = weatherMapper.getWeatherConfig().getCityName();
+                    execMessage(weatherMapper.weatherForecastDay(cityName, 1), text);
+                    return;
                 default:
                     defaultCommand(chatId);
             }
@@ -194,6 +199,23 @@ public class TelegramBot extends TelegramLongPollingBot
     {
         messageText.setText(text);
         messageText.setParseMode(ParseMode.HTML);
+        try
+        {
+            execute(messageText);
+        } catch (TelegramApiException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void execMessage(String text, @NotNull EditMessageText messageText)
+    {
+        messageText.setText(text);
+        messageText.setParseMode(ParseMode.HTML);
+        var markup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = BotModel.buttonWF(botLanguage);
+        markup.setKeyboard(rows);
+        messageText.setReplyMarkup(markup);
         try
         {
             execute(messageText);
@@ -238,7 +260,7 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
-    public void sendMessWeatherForecast(long chatId, int countDays, String text)
+    public void sendMessWeatherForecast(long chatId, @Max(value = 10) int countDays, String text)
     {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);

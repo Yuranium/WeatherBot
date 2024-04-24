@@ -60,8 +60,13 @@ public class WeatherMapper
         {
             for (WeatherData data : weatherForecast.weatherDataList())
                 System.out.println(data);
-            return "Для тестирования, количество элементов:" + weatherForecast.weatherDataList().size();
+            return "Для тестирования: " + weatherForecast.weatherDataList().size();
         }
+    }
+
+    public String weatherForecastDay(String cityName, int position)
+    {
+        return cityName + " " + weatherForecast.weatherDataList().get(position - 1).toString();
     }
 
     private String convertCityNameCorrectly(String str)
