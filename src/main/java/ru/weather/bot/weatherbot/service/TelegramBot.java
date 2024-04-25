@@ -1,6 +1,5 @@
 package ru.weather.bot.weatherbot.service;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -86,25 +85,25 @@ public class TelegramBot extends TelegramLongPollingBot
                         {
                             weather = weatherMapper.weatherForecastDispatch(message.toLowerCase(), botLanguage);
                             if (weather == null || weather.isEmpty())
-                                executeMessage(chatId, input_error);
+                                executeMessage(chatId, input_error, null);
                             else
                             {
                                 String[] city_days = weatherMapper.splitSpace(message.toLowerCase());
                                 weatherMapper.getWeatherConfig().setWeatherMessage(weather);
                                 weatherMapper.getWeatherConfig().setQuantityDays(Integer.parseInt(city_days[1]));
                                 weatherMapper.getWeatherConfig().setCityName(city_days[0]);
-                                sendMessWeatherForecast(chatId, Integer.parseInt(city_days[1]), weather);
+                                executeMessage(chatId, weather, () -> BotModel.getButtonsForecastWeather(weatherMapper.getWeatherConfig().getQuantityDays()));
                             }
                         }
                         else
                         {
                             weather = weatherMapper.weatherDispatch(message.toLowerCase(), botLanguage);
                             if (weather == null || weather.isEmpty())
-                                executeMessage(chatId, input_error);
+                                executeMessage(chatId, input_error, null);
                             else
                             {
                                 weatherMapper.getWeatherConfig().setCityName(message.toLowerCase());
-                                sendMessageWithScreenButton(chatId, weather);
+                                executeMessage(chatId, weather, () -> BotModel.getButtonForDetailedWeather(botLanguage));
                             }
                         }
                     }
@@ -130,78 +129,78 @@ public class TelegramBot extends TelegramLongPollingBot
 
             if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue()))
             {
-                executeMessage(chatId, unsuccessfulEvent);
+                executeMessage(chatId, unsuccessfulEvent, null);
                 return;
             }
             switch (callbackData)
             {
                 case "RuLang":
                     if (botLanguage == BotLanguage.RUSSIAN)
-                        executeMessage(Messages.RU_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                        execMessage(Messages.RU_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
                     else
                     {
                         newMessage = Messages.RU_FURTHER_COMMUNICATION;
-                        executeMessage(newMessage, text);
+                        execMessage(newMessage, text, null);
                         botLanguage = BotLanguage.RUSSIAN;
                     }
                     break;
                 case "EnLang":
                     if (botLanguage == BotLanguage.ENGLISH)
-                        executeMessage(Messages.EN_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                        execMessage(Messages.EN_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
                     else
                     {
                         newMessage = Messages.EN_FURTHER_COMMUNICATION;
-                        executeMessage(newMessage, text);
+                        execMessage(newMessage, text, null);
                         botLanguage = BotLanguage.ENGLISH;
                     }
                     break;
                 case "CnLang":
                     if (botLanguage == BotLanguage.CHINESE)
-                        executeMessage(Messages.CN_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                        execMessage(Messages.CN_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
                     else
                     {
                         newMessage = Messages.CN_FURTHER_COMMUNICATION;
-                        executeMessage(newMessage, text);
+                        execMessage(newMessage, text, null);
                         botLanguage = BotLanguage.CHINESE;
                     }
                     break;
                 case "DeLang":
                     if (botLanguage == BotLanguage.GERMAN)
-                        executeMessage(Messages.DE_THE_LANGUAGE_IS_ALREADY_THERE, text);
+                        execMessage(Messages.DE_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
                     else
                     {
                         newMessage = Messages.DE_FURTHER_COMMUNICATION;
-                        executeMessage(newMessage, text);
+                        execMessage(newMessage, text, null);
                         botLanguage = BotLanguage.GERMAN;
                     }
                     break;
                 case "DetailedWeather":
                     String message = weatherMapper.getWeatherConfig().getCityName();
-                    executeMessage(weatherMapper.detailedWeather(message, botLanguage), text);
+                    execMessage(weatherMapper.detailedWeather(message, botLanguage), text, null);
                     return;
                 case "WF_1":
                     String cityName1 = weatherMapper.getWeatherConfig().getCityName();
-                    execMessage(weatherMapper.weatherForecastDay(cityName1, 1, botLanguage), text);
+                    execMessage(weatherMapper.weatherForecastDay(cityName1, 1, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_2":
                     String cityName2 = weatherMapper.getWeatherConfig().getCityName();
-                    execMessage(weatherMapper.weatherForecastDay(cityName2, 2, botLanguage), text);
+                    execMessage(weatherMapper.weatherForecastDay(cityName2, 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_3":
                     String cityName3 = weatherMapper.getWeatherConfig().getCityName();
-                    execMessage(weatherMapper.weatherForecastDay(cityName3, 3, botLanguage), text);
+                    execMessage(weatherMapper.weatherForecastDay(cityName3, 3, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_4":
                     String cityName4 = weatherMapper.getWeatherConfig().getCityName();
-                    execMessage(weatherMapper.weatherForecastDay(cityName4, 4, botLanguage), text);
+                    execMessage(weatherMapper.weatherForecastDay(cityName4, 4, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_5":
                     String cityName5 = weatherMapper.getWeatherConfig().getCityName();
-                    execMessage(weatherMapper.weatherForecastDay(cityName5, 5, botLanguage), text);
+                    execMessage(weatherMapper.weatherForecastDay(cityName5, 5, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "Back":
                     String weatherMessage = weatherMapper.getWeatherConfig().getWeatherMessage();
-                    editMessageWF(weatherMessage, text);
+                    execMessage(weatherMessage, text, () -> BotModel.getButtonsForecastWeather(weatherMapper.getWeatherConfig().getQuantityDays()));
                     return;
                 default:
                     defaultCommand(chatId);
@@ -211,10 +210,17 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
-    private void executeMessage(String text, @NotNull EditMessageText messageText)
+    private void execMessage(String text, @NotNull EditMessageText messageText, EditMessage message)
     {
         messageText.setText(text);
         messageText.setParseMode(ParseMode.HTML);
+        if (message != null)
+        {
+            var markup = new InlineKeyboardMarkup();
+            List<List<InlineKeyboardButton>> rows = message.getButton();
+            markup.setKeyboard(rows);
+            messageText.setReplyMarkup(markup);
+        }
         try
         {
             execute(messageText);
@@ -224,87 +230,19 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
-    private void execMessage(String text, @NotNull EditMessageText messageText)
-    {
-        messageText.setText(text);
-        messageText.setParseMode(ParseMode.HTML);
-        var markup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = BotModel.buttonWF(botLanguage);
-        markup.setKeyboard(rows);
-        messageText.setReplyMarkup(markup);
-        try
-        {
-            execute(messageText);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void editMessageWF(String text, @NotNull EditMessageText messageText)
-    {
-        messageText.setText(text);
-        messageText.setParseMode(ParseMode.HTML);
-        var markup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = BotModel.getButtonsForecastWeather(weatherMapper.getWeatherConfig().getQuantityDays());
-        markup.setKeyboard(rows);
-        messageText.setReplyMarkup(markup);
-        try
-        {
-            execute(messageText);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void executeMessage(long chatId, String text)
+    private void executeMessage(long chatId, String text, EditMessage message)
     {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(text);
         sendMessage.setParseMode(ParseMode.HTML);
-        try
+        if (message != null)
         {
-            execute(sendMessage);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
+            var markup = new InlineKeyboardMarkup();
+            List<List<InlineKeyboardButton>> rows = message.getButton();
+            markup.setKeyboard(rows);
+            sendMessage.setReplyMarkup(markup);
         }
-    }
-
-    public void sendMessageWithScreenButton(long chatId, String text)
-    {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(text);
-        sendMessage.setParseMode(ParseMode.HTML);
-
-        var markup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = BotModel.getButtonForDetailedWeather(botLanguage);
-        markup.setKeyboard(rows);
-        sendMessage.setReplyMarkup(markup);
-        try
-        {
-            execute(sendMessage);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void sendMessWeatherForecast(long chatId, @Max(value = 10) int countDays, String text)
-    {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(text);
-        sendMessage.setParseMode(ParseMode.HTML);
-        var markup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = BotModel.getButtonsForecastWeather(countDays);
-        markup.setKeyboard(rows);
-        sendMessage.setReplyMarkup(markup);
-        markup.setKeyboard(rows);
-        sendMessage.setReplyMarkup(markup);
         try
         {
             execute(sendMessage);
@@ -318,21 +256,7 @@ public class TelegramBot extends TelegramLongPollingBot
     {
         String message = "Hi, " + name + ", glad to meet you \uD83D\uDC4B\n\n" +
                 "❗✋ Before you work with me further, choose the right language to communicate in. ✋❗";
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(message);
-
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = BotModel.getRowsForScreenButton();
-        markup.setKeyboard(rows);
-        sendMessage.setReplyMarkup(markup);
-        try
-        {
-            execute(sendMessage);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
+        executeMessage(chatId, message, BotModel::getRowsForScreenButton);
     }
 
     public void helpCommand(long chatId)
@@ -344,16 +268,7 @@ public class TelegramBot extends TelegramLongPollingBot
             case CHINESE -> Messages.CN_HELP;
             case GERMAN -> Messages.DE_HELP;
         };
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(message);
-        try
-        {
-            execute(sendMessage);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
+        executeMessage(chatId, message, null);
     }
 
     public void langCommand(long chatId)
@@ -365,21 +280,7 @@ public class TelegramBot extends TelegramLongPollingBot
             case CHINESE -> Messages.SET_LANG_CN;
             case GERMAN -> Messages.SET_LANG_DE;
         };
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(message);
-
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = BotModel.getRowsForScreenButton();
-        markup.setKeyboard(rows);
-        sendMessage.setReplyMarkup(markup);
-        try
-        {
-            execute(sendMessage);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
+        executeMessage(chatId, message, BotModel::getRowsForScreenButton);
     }
 
     private void defaultCommand(long chatId)
@@ -391,6 +292,6 @@ public class TelegramBot extends TelegramLongPollingBot
             case CHINESE -> Messages.CN_UNSUPPORTED_COMMAND;
             case GERMAN -> Messages.DE_UNSUPPORTED_COMMAND;
         };
-        executeMessage(chatId, message);
+        executeMessage(chatId, message, null);
     }
 }
