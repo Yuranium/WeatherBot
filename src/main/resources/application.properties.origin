@@ -3,4 +3,4 @@ bot.name=
 bot.token=
 weather.api.key=
 weather.url.template=
-weather.forecast.url.template=
+weather-forecast.url.template=
