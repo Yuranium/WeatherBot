@@ -60,13 +60,17 @@ public class WeatherMapper
         {
             for (WeatherData data : weatherForecast.weatherDataList())
                 System.out.println(data);
-            return "Для тестирования: " + weatherForecast.weatherDataList().size();
+            String[] city_days = splitSpace(cityName);
+            return Messages.weatherForecastGeneralInfo(language, convertCityNameCorrectly(city_days[0]), Integer.parseInt(city_days[1]));
         }
     }
 
-    public String weatherForecastDay(String cityName, int position)
+    public String weatherForecastDay(String cityName, int position, BotLanguage language)
     {
-        return cityName + " " + weatherForecast.weatherDataList().get(position - 1).toString();
+        return (weatherForecast == null) ? null : Messages.weatherForecast(language, convertCityNameCorrectly(cityName),
+                weatherForecast.weatherDataList().get(position - 1).weather().get(0).description(), weatherForecast.weatherDataList().get(position - 1).main().temp(),
+                weatherForecast.weatherDataList().get(position - 1).main().feels_like(), weatherForecast.weatherDataList().get(position - 1).clouds().clouds(),
+                weatherForecast.weatherDataList().get(position - 1).wind().speed());
     }
 
     private String convertCityNameCorrectly(String str)

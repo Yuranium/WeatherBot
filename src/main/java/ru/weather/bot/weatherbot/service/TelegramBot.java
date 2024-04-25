@@ -74,47 +74,40 @@ public class TelegramBot extends TelegramLongPollingBot
                         defaultCommand(chatId);
                     else
                     {
-                        String weather;
+                        String weather, input_error = switch (botLanguage)
+                        {
+                            case RUSSIAN -> Messages.RU_CITY_INPUT_ERROR;
+                            case ENGLISH -> Messages.EN_CITY_INPUT_ERROR;
+                            case CHINESE -> Messages.CN_CITY_INPUT_ERROR;
+                            case GERMAN -> Messages.DE_CITY_INPUT_ERROR;
+                        };
                         if (message.matches("^.*\\s\\d{1,2}$"))
                         {
                             weather = weatherMapper.weatherForecastDispatch(message.toLowerCase(), botLanguage);
                             if (weather == null || weather.isEmpty())
+                                executeMessage(chatId, input_error);
+                            else
                             {
-                                executeMessage(chatId, switch (botLanguage)
-                                {
-                                    case RUSSIAN -> Messages.RU_CITY_INPUT_ERROR;
-                                    case ENGLISH -> Messages.EN_CITY_INPUT_ERROR;
-                                    case CHINESE -> Messages.CN_CITY_INPUT_ERROR;
-                                    case GERMAN -> Messages.DE_CITY_INPUT_ERROR;
-                                });
-                            } else
-                            {
-                                int cntDays = Integer.parseInt(weatherMapper.splitSpace(message.toLowerCase())[1]);
+                                String[] city_days = weatherMapper.splitSpace(message.toLowerCase());
                                 botConfig.setMessageId(update.getMessage().getMessageId() + 1);
-                                weatherMapper.getWeatherConfig().setCityName(weatherMapper.splitSpace(message.toLowerCase())[0]);
-                                sendMessWeatherForecast(chatId, cntDays, weather);
+                                weatherMapper.getWeatherConfig().setWeatherMessage(weather);
+                                weatherMapper.getWeatherConfig().setQuantityDays(Integer.parseInt(city_days[1]));
+                                weatherMapper.getWeatherConfig().setCityName(city_days[0]);
+                                sendMessWeatherForecast(chatId, Integer.parseInt(city_days[1]), weather);
                             }
                         }
                         else
                         {
                             weather = weatherMapper.weatherDispatch(message.toLowerCase(), botLanguage);
                             if (weather == null || weather.isEmpty())
-                            {
-                                executeMessage(chatId, switch (botLanguage)
-                                {
-                                    case RUSSIAN -> Messages.RU_CITY_INPUT_ERROR;
-                                    case ENGLISH -> Messages.EN_CITY_INPUT_ERROR;
-                                    case CHINESE -> Messages.CN_CITY_INPUT_ERROR;
-                                    case GERMAN -> Messages.DE_CITY_INPUT_ERROR;
-                                });
-                            } else
+                                executeMessage(chatId, input_error);
+                            else
                             {
                                 botConfig.setMessageId(update.getMessage().getMessageId() + 1);
                                 weatherMapper.getWeatherConfig().setCityName(message.toLowerCase());
                                 sendMessageWithScreenButton(chatId, weather);
                             }
                         }
-                       // weather = weatherMapper.weatherDispatch(message.toLowerCase(), botLanguage);
                     }
             }
         } else if (update.hasCallbackQuery())
@@ -127,6 +120,14 @@ public class TelegramBot extends TelegramLongPollingBot
             EditMessageText text = new EditMessageText();
             text.setChatId(chatId);
             text.setMessageId(messageId);
+
+            String unsuccessfulEvent = switch (botLanguage)
+            {
+                case RUSSIAN -> Messages.RU_UNSUCCESSFUL_EVENT_HANDLING;
+                case ENGLISH -> Messages.EN_UNSUCCESSFUL_EVENT_HANDLING;
+                case CHINESE -> Messages.CN_UNSUCCESSFUL_EVENT_HANDLING;
+                case GERMAN -> Messages.DE_UNSUCCESSFUL_EVENT_HANDLING;
+            };
             switch (callbackData)
             {
                 case "RuLang":
@@ -171,21 +172,52 @@ public class TelegramBot extends TelegramLongPollingBot
                     break;
                 case "DetailedWeather":
                     String message = weatherMapper.getWeatherConfig().getCityName();
-                    String unsuccessfulEvent = switch (botLanguage)
-                    {
-                        case RUSSIAN -> Messages.RU_UNSUCCESSFUL_EVENT_HANDLING;
-                        case ENGLISH -> Messages.EN_UNSUCCESSFUL_EVENT_HANDLING;
-                        case CHINESE -> Messages.CN_UNSUCCESSFUL_EVENT_HANDLING;
-                        case GERMAN -> Messages.DE_UNSUCCESSFUL_EVENT_HANDLING;
-                    };
                     if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
                             (message == null || message.isEmpty())))
                         executeMessage(chatId, unsuccessfulEvent);
                     else executeMessage(weatherMapper.detailedWeather(message, botLanguage), text);
                     return;
                 case "WF_1":
-                    String cityName = weatherMapper.getWeatherConfig().getCityName();
-                    execMessage(weatherMapper.weatherForecastDay(cityName, 1), text);
+                    String cityName1 = weatherMapper.getWeatherConfig().getCityName();
+                    if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (cityName1 == null || cityName1.isEmpty())))
+                        executeMessage(chatId, unsuccessfulEvent);
+                    else execMessage(weatherMapper.weatherForecastDay(cityName1, 1, botLanguage), text);
+                    return;
+                case "WF_2":
+                    String cityName2 = weatherMapper.getWeatherConfig().getCityName();
+                    if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (cityName2 == null || cityName2.isEmpty())))
+                        executeMessage(chatId, unsuccessfulEvent);
+                    else execMessage(weatherMapper.weatherForecastDay(cityName2, 2, botLanguage), text);
+                    return;
+                case "WF_3":
+                    String cityName3 = weatherMapper.getWeatherConfig().getCityName();
+                    if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (cityName3 == null || cityName3.isEmpty())))
+                        executeMessage(chatId, unsuccessfulEvent);
+                    else execMessage(weatherMapper.weatherForecastDay(cityName3, 3, botLanguage), text);
+                    return;
+                case "WF_4":
+                    String cityName4 = weatherMapper.getWeatherConfig().getCityName();
+                    if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (cityName4 == null || cityName4.isEmpty())))
+                        executeMessage(chatId, unsuccessfulEvent);
+                    else execMessage(weatherMapper.weatherForecastDay(cityName4, 4, botLanguage), text);
+                    return;
+                case "WF_5":
+                    String cityName5 = weatherMapper.getWeatherConfig().getCityName();
+                    if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (cityName5 == null || cityName5.isEmpty())))
+                        executeMessage(chatId, unsuccessfulEvent);
+                    else execMessage(weatherMapper.weatherForecastDay(cityName5, 5, botLanguage), text);
+                    return;
+                case "Back":
+                    String weatherMessage = weatherMapper.getWeatherConfig().getWeatherMessage();
+                    if (botConfig.getMessageId() == null || (messageId.intValue() != botConfig.getMessageId().intValue() ||
+                            (weatherMessage == null || weatherMessage.isEmpty())))
+                        executeMessage(chatId, unsuccessfulEvent);
+                    else editMessageWF(weatherMessage, text);
                     return;
                 default:
                     defaultCommand(chatId);
@@ -214,6 +246,23 @@ public class TelegramBot extends TelegramLongPollingBot
         messageText.setParseMode(ParseMode.HTML);
         var markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = BotModel.buttonWF(botLanguage);
+        markup.setKeyboard(rows);
+        messageText.setReplyMarkup(markup);
+        try
+        {
+            execute(messageText);
+        } catch (TelegramApiException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void editMessageWF(String text, @NotNull EditMessageText messageText)
+    {
+        messageText.setText(text);
+        messageText.setParseMode(ParseMode.HTML);
+        var markup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = BotModel.getButtonsForecastWeather(weatherMapper.getWeatherConfig().getQuantityDays());
         markup.setKeyboard(rows);
         messageText.setReplyMarkup(markup);
         try

@@ -79,6 +79,43 @@ public interface Messages
                     "\n\n☁ Bewölkungsgrad: <b>" + clouds + "%</b>";
         };
     }
+
+    static String weatherForecastGeneralInfo(BotLanguage language, String cityName, int quantityDays) {
+        String daysFormat;
+        if (quantityDays == 1)
+            daysFormat = switch (language)
+            {
+                case RUSSIAN -> "день";
+                case ENGLISH -> "day";
+                case CHINESE -> "天";
+                case GERMAN -> "Tag";
+            };
+        else if (quantityDays >= 2 && quantityDays < 5)
+            daysFormat = switch (language)
+            {
+                case RUSSIAN -> "дня";
+                case ENGLISH -> "days";
+                case CHINESE -> "天";
+                case GERMAN -> "Tage";
+            };
+        else daysFormat = switch (language)
+            {
+                case RUSSIAN -> "дней";
+                case ENGLISH -> "days";
+                case CHINESE -> "天";
+                case GERMAN -> "Tage";
+            };
+        return switch (language)
+        {
+            case RUSSIAN -> "❄ \uD83D\uDCC5\n\n\uD83D\uDC4D Хорошо! Прогноз погоды на " + quantityDays +
+                    " " + daysFormat + " вперёд для региона " + cityName + ", начиная с сегодня:";
+            case ENGLISH -> "❄ \uD83D\uDCC5\n\n\uD83D\uDC4D Good! Weather forecast for " + quantityDays +
+                    " " + daysFormat + " ahead for the region of " + cityName + " starting today:";
+            case CHINESE -> "❄ \uD83D\uDCC5\n\n\uD83D\uDC4D 好！从今天起，" + quantityDays + "市未来" + cityName + "天的天气预报：";
+            case GERMAN -> "❄ \uD83D\uDCC5\n\n\uD83D\uDC4D Gut! Wettervorhersage für " + quantityDays + " " + daysFormat +
+                    " voraus in der Region " + cityName + " ab heute:";
+        };
+    }
     String RU_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ Язык уже выбран как русский.";
     String EN_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ The language is already selected as English.";
     String CN_THE_LANGUAGE_IS_ALREADY_THERE = "⚠ 语言已选择为中文。";

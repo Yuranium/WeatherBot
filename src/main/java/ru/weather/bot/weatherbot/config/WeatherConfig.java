@@ -21,8 +21,21 @@ public class WeatherConfig
 
     private String cityName;
 
+    private String weatherMessage;
+
+    private int quantityDays;
+
     public void setCityName(String cityName)
     {
         this.cityName = cityName;
+    }
+
+    public void setWeatherMessage(String weatherMessage) {
+        this.weatherMessage = weatherMessage;
+    }
+
+    public void setQuantityDays(int quantityDays)
+    {
+        this.quantityDays = quantityDays;
     }
 }
