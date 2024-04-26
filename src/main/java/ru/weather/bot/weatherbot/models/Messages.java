@@ -8,13 +8,13 @@ public interface Messages
     {
         return switch (language)
         {
-            case RUSSIAN -> "\uD83C\uDFD9\uFE0F В городе " + cityName + " " + description + ", \uD83C\uDF21\uFE0F средняя температура на улице " + temp +
+            case RUSSIAN -> "\uD83C\uDFD9\uFE0F В регионе " + cityName + " " + description + ", \uD83C\uDF21\uFE0F средняя температура на улице " + temp +
                     "°C, ощущается как " + feels_like + "°C, ☁ облачность составляет " + clouds + "%, \uD83D\uDCA8 скорость ветра достигает " + speed + " м/c.";
             case ENGLISH -> "\uD83C\uDFD9\uFE0F In the city of " + cityName + " " + description + ", \uD83C\uDF21\uFE0F the average temperature outside is " +
                     temp + "°C, feels like " +  feels_like + "°C, ☁ cloudiness is " + clouds + "%, \uD83D\uDCA8 wind speeds up to " + speed + " m/s.";
             case CHINESE -> "\uD83C\uDFD9\uFE0F 在" + cityName + description + "城市，\uD83C\uDF21\uFE0F，室外平均气温为 " + temp + "℃，感觉温度为" + feels_like +
                     "℃，☁ ，云量为 " + clouds + "，\uD83D\uDCA8 风速达到 " + speed + " 米/秒。";
-            case GERMAN -> "\uD83C\uDFD9\uFE0F In der Stadt " + cityName + " " +  description + ", \uD83C\uDF21\uFE0F beträgt die durchschnittliche Außentemperatur " +
+            case GERMAN -> "\uD83C\uDFD9\uFE0F In der Region " + cityName + " " +  description + ", \uD83C\uDF21\uFE0F beträgt die durchschnittliche Außentemperatur " +
                     temp + "°C, gefühlt " + feels_like + "°C, ☁ beträgt die Bewölkung " + clouds + "%, \uD83D\uDCA8 windgeschwindigkeiten bis zu " + speed + " m/s.";
         };
     }
@@ -31,7 +31,7 @@ public interface Messages
                     "\n\n\uD83D\uDC64 Ощущается как: <b>" + feels_like + "°C</b>" +
                     "\n\n\uD83E\uDDCA Минимальная температура: <b>" + temp_min + "°C</b>" +
                     "\n\n\uD83D\uDD25 Максимальная температура: <b>" + temp_max + "°C</b>" +
-                    "\n\n\uD83D\uDDDC Давление: <b>" + pressure + " мм рт. ст.</b>" +
+                    "\n\n\uD83D\uDDDC Давление: <b>" + (pressure * 0.75) + " мм рт. ст.</b>" +
                     "\n\n\uD83D\uDCA6 Влажность: <b>" + humidity + "%</b>" +
                     "\n\n\uD83D\uDD2D Видимость: <b>" + visibility + "км</b>" +
                     "\n\n\uD83D\uDCA8 Скорость ветра: <b>" + speed + "м/c</b>" +
@@ -44,7 +44,7 @@ public interface Messages
                     "\n\n\uD83D\uDC64 Feels like: <b>" + feels_like + "°C</b>" +
                     "\n\n\uD83E\uDDCA Minimum temperature: <b>" + temp_min + "°C</b>" +
                     "\n\n\uD83D\uDD25 Maximum temperature: <b>" + temp_max + "°C</b>" +
-                    "\n\n\uD83D\uDDDC Pressure: <b>" + pressure + " mmHg</b>" +
+                    "\n\n\uD83D\uDDDC Pressure: <b>" + (pressure * 0.75) + " mmHg</b>" +
                     "\n\n\uD83D\uDCA6 Humidity: <b>" + humidity + "%</b>" +
                     "\n\n\uD83D\uDD2D Visibility: <b>" + visibility + "km</b>" +
                     "\n\n\uD83D\uDCA8 Wind speed: <b>" + speed + "m/sec</b>" +
@@ -57,7 +57,7 @@ public interface Messages
                     "\n\n\uD83D\uDC64 感觉： <b>" + feels_like + "°C</b>" +
                     "\n\n\uD83E\uDDCA 最低气温： <b>" + temp_min + "°C</b>" +
                     "\n\n\uD83D\uDD25 最高气温： <b>" + temp_max + "°C</b>" +
-                    "\n\n\uD83D\uDDDC 气压： <b>" + pressure + " mmHg。</b>" +
+                    "\n\n\uD83D\uDDDC 气压： <b>" + (pressure * 0.75) + " mmHg。</b>" +
                     "\n\n\uD83D\uDCA6 湿度： <b>" + humidity + "%</b>" +
                     "\n\n\uD83D\uDD2D 能见度： <b>" + visibility + "公里</b>" +
                     "\n\n\uD83D\uDCA8 风速： <b>" + speed + "米/秒。</b>" +
@@ -70,7 +70,7 @@ public interface Messages
                     "\n\n\uD83D\uDC64 Fühlt sich an wie: <b>" + feels_like + "°C</b>" +
                     "\n\n\uD83E\uDDCA Tiefsttemperatur: <b>" + temp_min + "°C</b>" +
                     "\n\n\uD83D\uDD25 Höchsttemperatur: <b>" + temp_max + "°C</b>" +
-                    "\n\n\uD83D\uDDDC Luftdruck: <b>" + pressure + " mmHg</b>" +
+                    "\n\n\uD83D\uDDDC Luftdruck: <b>" + (pressure * 0.75) + " mmHg</b>" +
                     "\n\n\uD83D\uDCA6 Luftfeuchtigkeit: <b>" + humidity + "%</b>" +
                     "\n\n\uD83D\uDD2D Sichtweite: <b>" + visibility + "km</b>" +
                     "\n\n\uD83D\uDCA8 Windgeschwindigkeit: <b>" + speed + "m/sec</b>" +
@@ -140,6 +140,8 @@ public interface Messages
         "\uD83D\uDD38 Если что-то непонятно, можно отправить команду /help. Выведется краткая информация по использованию. ℹ\n\n" +
         "\uD83D\uDD38 Если хотите изменить язык общения со мной, можно выбрать 1 из 4 предложенных языков здесь: /lang. По умолчанию будет выбран английский язык. \uD83C\uDDEC\uD83C\uDDE7\n\n" +
         "\uD83D\uDD38 Для того, чтобы узнать погоду в определённом городе, просто отправьте название города в любом формате, главное без орфографических ошибок! \uD83D\uDD8C\n\n" +
+        "\uD83D\uDD38 Чтобы узнать прогноз погоды на несколько дней, просто отправьте сообщение в таком формате: <b><i>'Название региона' 'количество дней'</i></b>\n" +
+        "\uD83C\uDF06 Например, чтобы узнать прогноз погоды в Москве на 4 дня, можно отправить: Москва 4\n<b><i>Количество дней ограничено пятью ❕</i></b>\n\n" +
         "\uD83D\uDD38 Можно узнать более подробные сведения о погоде, они будут предложены после вывода общей информации о погоде. ☔";
     String EN_HELP = "I am designed to keep you conveniently informed about weather conditions around the world! \uD83D\uDCE3\n" +
             "My functionality includes performing various tasks such as \uD83D\uDD00\n\n" +
@@ -147,12 +149,16 @@ public interface Messages
             "\uD83D\uDD38 If something is unclear, you can send the command /help. A summary of usage information will be displayed. ℹ\n\n" +
             "\uD83D\uDD38 If you want to change the language of communication with me, you can choose 1 of 4 languages here: /lang. English will be selected by default. \uD83C\uDDEC\uD83C\uDDE7\n\n" +
             "\uD83D\uDD38 In order to find out the weather in a certain city, just send the name of the city in any format, the main thing is without spelling mistakes! \uD83D\uDD8C\n\n" +
+            "\uD83D\uDD38 To find out the weather forecast for several days, just send a message in this format: <b><i>'Name of region' 'number of days'</i></b>\n" +
+            "\uD83C\uDF06 For example, to get the weather forecast for Moscow for 4 days, you can send: Moscow 4\n<b><i>The number of days is limited to five ❕</i></b>\n\n" +
             "\uD83D\uDD38 You can find out more details about the weather, they will be offered after the general weather information is displayed. ☔";
     String CN_HELP = "我旨在让您方便地了解世界各地的天气情况！\uD83D\uDCE3\n我的功能包括执行各种任务，例如 \uD83D\uDD00\n\n" +
             "\uD83D\uDD38 要开始与我通信，您可以发送命令： /start。▶\n\n" +
             "\uD83D\uDD38 如果有不清楚的地方，可以发送 /help 命令。系统将显示使用信息摘要。ℹ\n\n" +
             "\uD83D\uDD38 如果您想更改与我交流的语言，可以从 4 种语言中选择一种：/lang。默认将选择英语。\uD83C\uDDEC\uD83C\uDDE7\n\n" +
             "\uD83D\uDD38 要想知道某个城市的天气情况，只需以任何格式发送城市名称，不要有拼写错误！\uD83D\uDD8C\n\n" +
+            "\uD83D\uDD38 要查询几天的天气预报，只需发送以下格式的信息： <b><i>'城市名称' '天数'</i></b>\n" +
+            "\uD83C\uDF06 例如，要查询莫斯科 4 天的天气预报，您可以发送： Moscow 4\n<b><i>天数以 5 天为限 ❕</i></b>\n\n" +
             "\uD83D\uDD38 您可以查找有关天气的更多详细信息，它们将在显示一般天气信息后提供。☔";
     String DE_HELP = "Ich wurde entwickelt, um Sie bequem über die Wetterbedingungen auf der ganzen Welt zu informieren! \uD83D\uDCE3\n" +
             "Zu meinen Funktionen gehört die Ausführung verschiedener Aufgaben, wie z. B. \uD83D\uDD00\n\n" +
@@ -160,6 +166,8 @@ public interface Messages
             "\uD83D\uDD38 Wenn etwas unklar ist, können Sie den Befehl /help senden. Es wird eine Zusammenfassung der Nutzungsinformationen angezeigt. ℹ\n\n" +
             "\uD83D\uDD38 Wenn Sie die Sprache der Kommunikation mit mir ändern möchten, können Sie hier 1 von 4 Sprachen auswählen: /lang. Standardmäßig ist Englisch ausgewählt. \uD83C\uDDEC\uD83C\uDDE7\n\n" +
             "\uD83D\uDD38 Um das Wetter in einer bestimmten Stadt herauszufinden, senden Sie einfach den Namen der Stadt in einem beliebigen Format, ohne Rechtschreibfehler! \uD83D\uDD8C\n\n" +
+            "\uD83D\uDD38 Um die Wettervorhersage für mehrere Tage zu erfahren, senden Sie einfach eine Nachricht in diesem Format: <b><i>'Name der Region' 'Anzahl der Tage'</i></b>\n" +
+            "\uD83C\uDF06 Um zum Beispiel die Wettervorhersage für Moskau für 4 Tage herauszufinden, können Sie senden: Moskau 4\n<b><i>Die Anzahl der Tage ist auf fünf begrenzt ❕</i></b>\n\n" +
             "\uD83D\uDD38 Sie können mehr Details über das Wetter herausfinden, diese werden nach der Anzeige der allgemeinen Wetterinformationen angeboten. ☔";
     String SET_LANG_RU = "\uD83C\uDF0D Чтобы сменить язык, выберите необходимый из списка предложенных." +
         " После все сообщения будут на выбранном языке \uD83D\uDE09";
