@@ -1,7 +1,6 @@
 package ru.weather.bot.weatherbot.models;
 
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
 

@@ -4,3 +4,4 @@ bot.token=
 weather.api.key=
 weather.url.template=
 weather-forecast.url.template=
+weather-map.url.template=

@@ -29,8 +29,10 @@ public class WeatherMapper
     private WeatherForecast weatherForecast;
 
     private static final int MAX_DAYS = 10;
-    static private int ZOOM = 4;
+
     private static final int MIN_DAYS = 0;
+
+    private static final int ZOOM = 4;
 
     @Autowired
     public WeatherMapper(WeatherConfig weatherConfig)
@@ -76,6 +78,11 @@ public class WeatherMapper
                 weatherForecast.weatherDataList().get(position - 1).main().feels_like(), weatherForecast.weatherDataList().get(position - 1).clouds().clouds(),
                 weatherForecast.weatherDataList().get(position - 1).wind().speed());
     }
+
+//    public String detailedWeatherForecast(String cityName, BotLanguage language) // Тест
+//    {
+//        return  (weatherForecast == null) ? null : weatherForecast.weatherDataList().get(weatherConfig.getCurrentDay() - 1).toString();
+//    }
 
     private String convertCityNameCorrectly(String str)
     {
@@ -184,9 +191,11 @@ public class WeatherMapper
         return null;
     }
 
-    public File fetchWeatherMap(String city, BotLanguage language){
+    public File fetchWeatherMap(String city, BotLanguage language)
+    {
         WeatherData data = fetchWeather(city, language);
-        if (data != null){
+        if (data != null)
+        {
             try
             {
                 int[] coord = weatherCoord(data.coord().latitude(), data.coord().longitude());
@@ -199,7 +208,8 @@ public class WeatherMapper
 
                 // Получение ответа
                 int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
+                if (responseCode == HttpURLConnection.HTTP_OK)
+                {
                     File imageFile = new File("src/main/resources/temp.png");
                     OutputStream outputStream = new FileOutputStream(imageFile);
                     InputStream inputStream = connection.getInputStream();
@@ -220,14 +230,13 @@ public class WeatherMapper
             {
                 exc.printStackTrace();
             }
-            return null;
         }
-        else{
-            return null;
-        }
+        return null;
     }
-    private int[] weatherCoord(double lat, double lon){
-        var tileSize = 256; // Размер тайла в пикселях
+
+    private int[] weatherCoord(double lat, double lon)
+    {
+        var tileSize = 256;
         var numTiles = Math.pow(2, ZOOM);
 
         var sinLatitude = Math.sin(lat * Math.PI / 180);
@@ -237,8 +246,6 @@ public class WeatherMapper
         var tileX = Math.floor(pixelX / tileSize);
         var tileY = Math.floor(pixelY / tileSize);
 
-        int[] arr = {(int)tileX, (int)tileY};
-
-        return arr;
+        return new int[]{(int) tileX, (int) tileY};
     }
 }

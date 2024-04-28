@@ -142,7 +142,7 @@ public interface Messages
         "\uD83D\uDD38 Если хотите получить карту погодных явлений вашего региона, воспользуйтесь командой: /map. Затем введите название города. \uD83D\uDDFA\uFE0F\n\n" +
         "\uD83D\uDD38 Для того, чтобы узнать погоду в определённом городе, просто отправьте название города в любом формате, главное без орфографических ошибок! \uD83D\uDD8C\n\n" +
         "\uD83D\uDD38 Чтобы узнать прогноз погоды на несколько дней, просто отправьте сообщение в таком формате: <b><i>'Название региона' 'количество дней'</i></b>\n" +
-        "\uD83C\uDF06 Например, чтобы узнать прогноз погоды в Москве на 4 дня, можно отправить: Москва 4\n<b><i>Количество дней ограничено пятью ❕</i></b>\n\n" +
+        "\uD83C\uDF06 Например, чтобы узнать прогноз погоды в Москве на 4 дня, можно отправить: Москва 4\n<b><i>Количество дней ограничено пятью❕</i></b>\n\n" +
         "\uD83D\uDD38 Можно узнать более подробные сведения о погоде, они будут предложены после вывода общей информации о погоде. ☔";
     String EN_HELP = "I am designed to keep you conveniently informed about weather conditions around the world! \uD83D\uDCE3\n" +
             "My functionality includes performing various tasks such as \uD83D\uDD00\n\n" +
@@ -152,7 +152,7 @@ public interface Messages
             "\uD83D\uDD38 If you want to get a map of weather conditions in your region, use the command: /map. Then enter the name of the city. \uD83D\uDDFA\uFE0F\n\n" +
             "\uD83D\uDD38 In order to find out the weather in a certain city, just send the name of the city in any format, the main thing is without spelling mistakes! \uD83D\uDD8C\n\n" +
             "\uD83D\uDD38 To find out the weather forecast for several days, just send a message in this format: <b><i>'Name of region' 'number of days'</i></b>\n" +
-            "\uD83C\uDF06 For example, to get the weather forecast for Moscow for 4 days, you can send: Moscow 4\n<b><i>The number of days is limited to five ❕</i></b>\n\n" +
+            "\uD83C\uDF06 For example, to get the weather forecast for Moscow for 4 days, you can send: Moscow 4\n<b><i>The number of days is limited to five❕</i></b>\n\n" +
             "\uD83D\uDD38 You can find out more details about the weather, they will be offered after the general weather information is displayed. ☔";
     String CN_HELP = "我旨在让您方便地了解世界各地的天气情况！\uD83D\uDCE3\n我的功能包括执行各种任务，例如 \uD83D\uDD00\n\n" +
             "\uD83D\uDD38 要开始与我通信，您可以发送命令： /start。▶\n\n" +
@@ -161,7 +161,7 @@ public interface Messages
             "\uD83D\uDD38 如果你想获得你所在地区的天气情况地图，请使用命令：/map。然后输入城市名称 \uD83D\uDDFA\uFE0F\n\n" +
             "\uD83D\uDD38 要想知道某个城市的天气情况，只需以任何格式发送城市名称，不要有拼写错误！\uD83D\uDD8C\n\n" +
             "\uD83D\uDD38 要查询几天的天气预报，只需发送以下格式的信息： <b><i>'城市名称' '天数'</i></b>\n" +
-            "\uD83C\uDF06 例如，要查询莫斯科 4 天的天气预报，您可以发送： Moscow 4\n<b><i>天数以 5 天为限 ❕</i></b>\n\n" +
+            "\uD83C\uDF06 例如，要查询莫斯科 4 天的天气预报，您可以发送： Moscow 4\n<b><i>天数以 5 天为限❕</i></b>\n\n" +
             "\uD83D\uDD38 您可以查找有关天气的更多详细信息，它们将在显示一般天气信息后提供。☔";
     String DE_HELP = "Ich wurde entwickelt, um Sie bequem über die Wetterbedingungen auf der ganzen Welt zu informieren! \uD83D\uDCE3\n" +
             "Zu meinen Funktionen gehört die Ausführung verschiedener Aufgaben, wie z. B. \uD83D\uDD00\n\n" +
@@ -171,7 +171,7 @@ public interface Messages
             "\uD83D\uDD38 Wenn Sie eine Karte der Wetterbedingungen in Ihrer Region abrufen möchten, verwenden Sie den Befehl: /map. Geben Sie dann den Namen der Stadt ein. \uD83D\uDDFA\uFE0F\n\n" +
             "\uD83D\uDD38 Um das Wetter in einer bestimmten Stadt herauszufinden, senden Sie einfach den Namen der Stadt in einem beliebigen Format, ohne Rechtschreibfehler! \uD83D\uDD8C\n\n" +
             "\uD83D\uDD38 Um die Wettervorhersage für mehrere Tage zu erfahren, senden Sie einfach eine Nachricht in diesem Format: <b><i>'Name der Region' 'Anzahl der Tage'</i></b>\n" +
-            "\uD83C\uDF06 Um zum Beispiel die Wettervorhersage für Moskau für 4 Tage herauszufinden, können Sie senden: Moskau 4\n<b><i>Die Anzahl der Tage ist auf fünf begrenzt ❕</i></b>\n\n" +
+            "\uD83C\uDF06 Um zum Beispiel die Wettervorhersage für Moskau für 4 Tage herauszufinden, können Sie senden: Moskau 4\n<b><i>Die Anzahl der Tage ist auf fünf begrenzt❕</i></b>\n\n" +
             "\uD83D\uDD38 Sie können mehr Details über das Wetter herausfinden, diese werden nach der Anzeige der allgemeinen Wetterinformationen angeboten. ☔";
     String SET_LANG_RU = "\uD83C\uDF0D Чтобы сменить язык, выберите необходимый из списка предложенных." +
         " После все сообщения будут на выбранном языке \uD83D\uDE09";

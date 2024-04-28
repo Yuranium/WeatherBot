@@ -21,11 +21,14 @@ public class WeatherConfig
 
     @Value("${weather-map.url.template}")
     private String mapTemplateUrl;
+
     private String cityName;
 
     private String weatherMessage;
 
     private int quantityDays;
+
+    private int currentDay; // Возможно удалить
 
     public void setCityName(String cityName)
     {
@@ -39,5 +42,10 @@ public class WeatherConfig
     public void setQuantityDays(int quantityDays)
     {
         this.quantityDays = quantityDays;
+    }
+
+    public void setCurrentDay(int currentDay)
+    {
+        this.currentDay = currentDay;
     }
 }
