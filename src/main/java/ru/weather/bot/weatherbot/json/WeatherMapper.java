@@ -8,10 +8,14 @@ import ru.weather.bot.weatherbot.config.WeatherConfig;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
 import ru.weather.bot.weatherbot.models.Messages;
 
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.Scanner;
 
 @Getter
@@ -25,7 +29,7 @@ public class WeatherMapper
     private WeatherForecast weatherForecast;
 
     private static final int MAX_DAYS = 10;
-
+    static private int ZOOM = 4;
     private static final int MIN_DAYS = 0;
 
     @Autowired
@@ -178,5 +182,63 @@ public class WeatherMapper
             exc.printStackTrace();
         }
         return null;
+    }
+
+    public File fetchWeatherMap(String city, BotLanguage language){
+        WeatherData data = fetchWeather(city, language);
+        if (data != null){
+            try
+            {
+                int[] coord = weatherCoord(data.coord().latitude(), data.coord().longitude());
+                String urlString = weatherConfig.getMapTemplateUrl().replace("{layer}", "temp_new").replace("{z}", ZOOM + "")
+                        .replace("{x}", coord[0] + "").replace("{y}", coord[1] + "").replace("{API key}", weatherConfig.getWeatherApiKey());
+                URL url = new URL(urlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.connect();
+
+                // Получение ответа
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    File imageFile = new File("src/main/resources/temp.png");
+                    OutputStream outputStream = new FileOutputStream(imageFile);
+                    InputStream inputStream = connection.getInputStream();
+
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1)
+                        outputStream.write(buffer, 0, bytesRead);
+                    inputStream.close();
+                    outputStream.close();
+
+                    return imageFile;
+                } else
+                {
+                    return null;
+                }
+            } catch (IOException exc)
+            {
+                exc.printStackTrace();
+            }
+            return null;
+        }
+        else{
+            return null;
+        }
+    }
+    private int[] weatherCoord(double lat, double lon){
+        var tileSize = 256; // Размер тайла в пикселях
+        var numTiles = Math.pow(2, ZOOM);
+
+        var sinLatitude = Math.sin(lat * Math.PI / 180);
+        var pixelX = ((lon + 180) / 360) * tileSize * numTiles;
+        var pixelY = (0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI)) * tileSize * numTiles;
+
+        var tileX = Math.floor(pixelX / tileSize);
+        var tileY = Math.floor(pixelY / tileSize);
+
+        int[] arr = {(int)tileX, (int)tileY};
+
+        return arr;
     }
 }

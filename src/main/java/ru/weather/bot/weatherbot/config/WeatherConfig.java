@@ -19,6 +19,8 @@ public class WeatherConfig
     @Value("${weather-forecast.url.template}")
     private String forecastTemplateUrl;
 
+    @Value("${weather-map.url.template}")
+    private String mapTemplateUrl;
     private String cityName;
 
     private String weatherMessage;

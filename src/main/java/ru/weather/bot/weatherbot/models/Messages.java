@@ -139,6 +139,7 @@ public interface Messages
         "\uD83D\uDD38 Для начала общения со мной, можно отправить команду: /start. ▶\n\n" +
         "\uD83D\uDD38 Если что-то непонятно, можно отправить команду /help. Выведется краткая информация по использованию. ℹ\n\n" +
         "\uD83D\uDD38 Если хотите изменить язык общения со мной, можно выбрать 1 из 4 предложенных языков здесь: /lang. По умолчанию будет выбран английский язык. \uD83C\uDDEC\uD83C\uDDE7\n\n" +
+        "\uD83D\uDD38 Если хотите получить карту погодных явлений вашего региона, воспользуйтесь командой: /map. Затем введите название города. \uD83D\uDDFA\uFE0F\n\n" +
         "\uD83D\uDD38 Для того, чтобы узнать погоду в определённом городе, просто отправьте название города в любом формате, главное без орфографических ошибок! \uD83D\uDD8C\n\n" +
         "\uD83D\uDD38 Чтобы узнать прогноз погоды на несколько дней, просто отправьте сообщение в таком формате: <b><i>'Название региона' 'количество дней'</i></b>\n" +
         "\uD83C\uDF06 Например, чтобы узнать прогноз погоды в Москве на 4 дня, можно отправить: Москва 4\n<b><i>Количество дней ограничено пятью ❕</i></b>\n\n" +
@@ -148,6 +149,7 @@ public interface Messages
             "\uD83D\uDD38 To start communicating with me, you can send the command: /start. ▶\n\n" +
             "\uD83D\uDD38 If something is unclear, you can send the command /help. A summary of usage information will be displayed. ℹ\n\n" +
             "\uD83D\uDD38 If you want to change the language of communication with me, you can choose 1 of 4 languages here: /lang. English will be selected by default. \uD83C\uDDEC\uD83C\uDDE7\n\n" +
+            "\uD83D\uDD38 If you want to get a map of weather conditions in your region, use the command: /map. Then enter the name of the city. \uD83D\uDDFA\uFE0F\n\n" +
             "\uD83D\uDD38 In order to find out the weather in a certain city, just send the name of the city in any format, the main thing is without spelling mistakes! \uD83D\uDD8C\n\n" +
             "\uD83D\uDD38 To find out the weather forecast for several days, just send a message in this format: <b><i>'Name of region' 'number of days'</i></b>\n" +
             "\uD83C\uDF06 For example, to get the weather forecast for Moscow for 4 days, you can send: Moscow 4\n<b><i>The number of days is limited to five ❕</i></b>\n\n" +
@@ -156,6 +158,7 @@ public interface Messages
             "\uD83D\uDD38 要开始与我通信，您可以发送命令： /start。▶\n\n" +
             "\uD83D\uDD38 如果有不清楚的地方，可以发送 /help 命令。系统将显示使用信息摘要。ℹ\n\n" +
             "\uD83D\uDD38 如果您想更改与我交流的语言，可以从 4 种语言中选择一种：/lang。默认将选择英语。\uD83C\uDDEC\uD83C\uDDE7\n\n" +
+            "\uD83D\uDD38 如果你想获得你所在地区的天气情况地图，请使用命令：/map。然后输入城市名称 \uD83D\uDDFA\uFE0F\n\n" +
             "\uD83D\uDD38 要想知道某个城市的天气情况，只需以任何格式发送城市名称，不要有拼写错误！\uD83D\uDD8C\n\n" +
             "\uD83D\uDD38 要查询几天的天气预报，只需发送以下格式的信息： <b><i>'城市名称' '天数'</i></b>\n" +
             "\uD83C\uDF06 例如，要查询莫斯科 4 天的天气预报，您可以发送： Moscow 4\n<b><i>天数以 5 天为限 ❕</i></b>\n\n" +
@@ -165,6 +168,7 @@ public interface Messages
             "\uD83D\uDD38 Um die Kommunikation mit mir zu starten, kannst du den Befehl: /start senden. ▶\n\n" +
             "\uD83D\uDD38 Wenn etwas unklar ist, können Sie den Befehl /help senden. Es wird eine Zusammenfassung der Nutzungsinformationen angezeigt. ℹ\n\n" +
             "\uD83D\uDD38 Wenn Sie die Sprache der Kommunikation mit mir ändern möchten, können Sie hier 1 von 4 Sprachen auswählen: /lang. Standardmäßig ist Englisch ausgewählt. \uD83C\uDDEC\uD83C\uDDE7\n\n" +
+            "\uD83D\uDD38 Wenn Sie eine Karte der Wetterbedingungen in Ihrer Region abrufen möchten, verwenden Sie den Befehl: /map. Geben Sie dann den Namen der Stadt ein. \uD83D\uDDFA\uFE0F\n\n" +
             "\uD83D\uDD38 Um das Wetter in einer bestimmten Stadt herauszufinden, senden Sie einfach den Namen der Stadt in einem beliebigen Format, ohne Rechtschreibfehler! \uD83D\uDD8C\n\n" +
             "\uD83D\uDD38 Um die Wettervorhersage für mehrere Tage zu erfahren, senden Sie einfach eine Nachricht in diesem Format: <b><i>'Name der Region' 'Anzahl der Tage'</i></b>\n" +
             "\uD83C\uDF06 Um zum Beispiel die Wettervorhersage für Moskau für 4 Tage herauszufinden, können Sie senden: Moskau 4\n<b><i>Die Anzahl der Tage ist auf fünf begrenzt ❕</i></b>\n\n" +
@@ -180,6 +184,10 @@ public interface Messages
     String EN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, this command is not currently supported or incorrect input.";
     String CN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E 对不起，当前不支持此命令或输入不正确。";
     String DE_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, dieser Befehl wird derzeit nicht unterstützt oder ist falsch eingegeben.";
+    String RU_NAME_OF_CITY = "Введите ваш регион \uD83C\uDF06";
+    String EN_NAME_OF_CITY = "Enter your region \uD83C\uDF06";
+    String CN_NAME_OF_CITY = "输入您所在的地区 \uD83C\uDF06";
+    String DE_NAME_OF_CITY = "Geben Sie Ihre Region ein \uD83C\uDF06";
     String RU_CITY_INPUT_ERROR = "❌ В ходе выполнения геокодирования введённого города, не было получено ни одного положительного ответа. " +
             "Убедитесь, что введённый Вами город написан без ошибок и существует.\n\n" +
             "Если это не помогло, возможно наблюдаются технические неполадки на стороне сервера, стоит повторить попытку позже.";
@@ -202,4 +210,6 @@ public interface Messages
     String START_COMMAND_DESCRIPTION = "Initial command to start the bot";
     String HELP_COMMAND_DESCRIPTION = "Allows you to get a brief overview of the possibilities";
     String LANG_COMMAND_DESCRIPTION = "Allows you to change the language of communication with the bot";
+    String MAP_COMMAND_DESCRIPTION = "The command is intended for sending a photo of the weather phenomena map";
+    String EN_UNSUCCESSFUL_RELOAD_EVENT_HANDLING = "\uD83D\uDED1 Please enter the /start command to start the bot ❗";
 }

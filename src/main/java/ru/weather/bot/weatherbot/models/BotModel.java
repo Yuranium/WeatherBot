@@ -65,6 +65,7 @@ public class BotModel
         commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.START.getCommand(), Messages.START_COMMAND_DESCRIPTION));
         commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.HELP.getCommand(), Messages.HELP_COMMAND_DESCRIPTION));
         commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.LANG.getCommand(), Messages.LANG_COMMAND_DESCRIPTION));
+        commandList.add(new BotCommand(ru.weather.bot.weatherbot.enums.BotCommand.MAP.getCommand(), Messages.MAP_COMMAND_DESCRIPTION));
         return commandList;
     }
 
