@@ -21,7 +21,7 @@ public interface Messages
 
     static String detailedWeatherForecast(BotLanguage language, String cityName, String description, double temp, double feels_like,
                                           double temp_min, double temp_max, double pressure, double humidity, double visibility, double speed,
-                                          double gust, String windDirection, int clouds)
+                                          double gust, String windDirection, int clouds, double lon, double lat)
     {
         return switch (language)
         {

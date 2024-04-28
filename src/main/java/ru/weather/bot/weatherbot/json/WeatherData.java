@@ -12,7 +12,8 @@ public record WeatherData(
         Main main,
         double visibility,
         Wind wind,
-        Clouds clouds
+        Clouds clouds,
+        Coord coord
 )
 {
     @Override
@@ -162,6 +163,23 @@ record Clouds(
     public String toString() {
         return "clouds{" +
                 "all=" + clouds +
+                '}';
+    }
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+record Coord(
+        @JsonProperty("lon")
+        double longitude,
+        @JsonProperty("lat")
+        double latitude
+)
+{
+    @Override
+    public String toString() {
+        return "Coord{" +
+                "lon=" + longitude +
+                ", lat=" + latitude +
                 '}';
     }
 }
