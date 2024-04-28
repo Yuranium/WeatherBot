@@ -42,8 +42,7 @@ public class WeatherMapper
         return (weatherData == null) ? null : Messages.detailedWeatherForecast(language, convertCityNameCorrectly(cityName),
                 weatherData.weather().get(0).description(), weatherData.main().temp(), weatherData.main().feels_like(), weatherData.main().temp_min(),
                 weatherData.main().temp_max(), weatherData.main().pressure(), weatherData.main().humidity(), (weatherData.visibility() / 1000D),
-                weatherData.wind().speed(), weatherData.wind().gust(), weatherData.wind().windGustFinding(language), weatherData.clouds().clouds(),
-                weatherData.coord().longitude(), weatherData.coord().latitude());
+                weatherData.wind().speed(), weatherData.wind().gust(), weatherData.wind().windGustFinding(language), weatherData.clouds().clouds());
     }
 
     private String convertCityNameCorrectly(String str)

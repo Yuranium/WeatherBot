@@ -327,7 +327,13 @@ public class TelegramBot extends TelegramLongPollingBot
     }
 
     private void mapCommand(long chatId){
-        String message = "Введите ваше город";
+        String message = switch (botLanguage)
+        {
+            case RUSSIAN -> Messages.RU_NAME_OF_CITY;
+            case ENGLISH -> Messages.EN_NAME_OF_CITY;
+            case CHINESE -> Messages.CN_NAME_OF_CITY;
+            case GERMAN -> Messages.DE_NAME_OF_CITY;
+    };
         executeMessage(chatId, message);
     }
 }

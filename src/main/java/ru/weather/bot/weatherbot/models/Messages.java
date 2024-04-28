@@ -21,7 +21,7 @@ public interface Messages
 
     static String detailedWeatherForecast(BotLanguage language, String cityName, String description, double temp, double feels_like,
                                           double temp_min, double temp_max, double pressure, double humidity, double visibility, double speed,
-                                          double gust, String windDirection, int clouds, double lon, double lat)
+                                          double gust, String windDirection, int clouds)
     {
         return switch (language)
         {
@@ -135,6 +135,10 @@ public interface Messages
     String EN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, this command is not currently supported or incorrect input.";
     String CN_UNSUPPORTED_COMMAND = "\uD83D\uDE1E 对不起，当前不支持此命令或输入不正确。";
     String DE_UNSUPPORTED_COMMAND = "\uD83D\uDE1E Sorry, dieser Befehl wird derzeit nicht unterstützt oder ist falsch eingegeben.";
+    String RU_NAME_OF_CITY = "Введите ваш регион \uD83C\uDF06";
+    String EN_NAME_OF_CITY = "Enter your region \uD83C\uDF06";
+    String CN_NAME_OF_CITY = "输入您所在的地区 \uD83C\uDF06";
+    String DE_NAME_OF_CITY = "Geben Sie Ihre Region ein \uD83C\uDF06";
     String RU_CITY_INPUT_ERROR = "❌ В ходе выполнения геокодирования введённого города, не было получено ни одного положительного ответа. " +
             "Убедитесь, что введённый Вами город написан без ошибок и существует.\n\n" +
             "Если это не помогло, возможно наблюдаются технические неполадки на стороне сервера, стоит повторить попытку позже.";
@@ -157,4 +161,5 @@ public interface Messages
     String START_COMMAND_DESCRIPTION = "Initial command to start the bot";
     String HELP_COMMAND_DESCRIPTION = "Allows you to get a brief overview of the possibilities";
     String LANG_COMMAND_DESCRIPTION = "Allows you to change the language of communication with the bot";
+    String MAP_COMMAND_DESCRIPTION = "The command is intended for sending a photo of the weather phenomena map";
 }
