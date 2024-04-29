@@ -217,7 +217,7 @@ public class WeatherMapper
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK)
                 {
-                    File imageFile = new File("src/main/resources/temp.png");
+                    File imageFile = new File("/app/images/temp.png"); // Путь в контейнере Docker
                     OutputStream outputStream = new FileOutputStream(imageFile);
                     InputStream inputStream = connection.getInputStream();
 
