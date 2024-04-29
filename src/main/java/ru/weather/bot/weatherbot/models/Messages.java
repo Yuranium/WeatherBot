@@ -80,6 +80,15 @@ public interface Messages
         };
     }
 
+    static String infoWeatherWithMap(BotLanguage language, String cityName){
+        return switch (language){
+            case RUSSIAN -> "\uD83D\uDDFA\uFE0F Текущая карта температуры для региона " + cityName + ".";
+            case ENGLISH -> "\uD83D\uDDFA\uFE0F Current temperature map for the region " + cityName + ".";
+            case CHINESE -> "\uD83D\uDDFA\uFE0F 该地区当前气温图 " + cityName + ".";
+            case GERMAN -> "\uD83D\uDDFA\uFE0F Aktuelle Temperaturkarte für die Region " + cityName + ".";
+        };
+    }
+
     static String weatherForecastGeneralInfo(BotLanguage language, String cityName, int quantityDays) {
         String daysFormat;
         if (quantityDays == 1)

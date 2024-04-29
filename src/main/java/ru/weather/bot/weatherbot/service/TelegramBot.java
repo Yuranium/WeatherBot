@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.weather.bot.weatherbot.config.BotConfig;
+import ru.weather.bot.weatherbot.config.WeatherConfig;
 import ru.weather.bot.weatherbot.enums.BotCommand;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
 import ru.weather.bot.weatherbot.json.WeatherMapper;
@@ -104,6 +105,7 @@ public class TelegramBot extends TelegramLongPollingBot
                                 sendPhoto.setPhoto(new InputFile(photoMap));
                                 execute(sendPhoto);
                                 photoMap.delete();
+                                executeMessage(chatId, Messages.infoWeatherWithMap(botLanguage,  message), null);
                             } catch (TelegramApiException e)
                             {
                                 e.printStackTrace();
