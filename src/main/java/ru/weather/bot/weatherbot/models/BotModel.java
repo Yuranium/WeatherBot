@@ -40,7 +40,7 @@ public class BotModel
         return rows;
     }
 
-    public static List<List<InlineKeyboardButton>> getButtonForDetailedWeather(BotLanguage language)
+    public static List<List<InlineKeyboardButton>> getButtonForDetailedWeather(BotLanguage language, String callBackData)
     {
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         List<InlineKeyboardButton> row = new ArrayList<>();
@@ -52,7 +52,7 @@ public class BotModel
             case CHINESE -> Messages.CN_DETAILED_FORECAST;
             case GERMAN -> Messages.DE_DETAILED_FORECAST;
         });
-        detailedForecast.setCallbackData("DetailedWeather");
+        detailedForecast.setCallbackData(callBackData);
         row.add(detailedForecast);
         rows.add(row);
         return rows;
@@ -90,7 +90,14 @@ public class BotModel
 
     public static List<List<InlineKeyboardButton>> buttonWF(BotLanguage language)
     {
-        List<List<InlineKeyboardButton>> rows = getButtonForDetailedWeather(language);
+        List<List<InlineKeyboardButton>> rows = getButtonForDetailedWeather(language, "DetailedWeatherForecast");
+        rows.addAll(getBackButton());
+        return rows;
+    }
+
+    public static List<List<InlineKeyboardButton>> getBackButton()
+    {
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         List<InlineKeyboardButton> row = new ArrayList<>();
         var button = new InlineKeyboardButton();
         button.setText("Назад");

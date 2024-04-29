@@ -139,7 +139,7 @@ public class TelegramBot extends TelegramLongPollingBot
                                 else
                                 {
                                     weatherMapper.getWeatherConfig().setCityName(message.toLowerCase());
-                                    executeMessage(chatId, weather, () -> BotModel.getButtonForDetailedWeather(botLanguage));
+                                    executeMessage(chatId, weather, () -> BotModel.getButtonForDetailedWeather(botLanguage, "DetailedWeather"));
                                 }
                             }
                         }
@@ -147,7 +147,6 @@ public class TelegramBot extends TelegramLongPollingBot
             }
         } else if (update.hasCallbackQuery())
         {
-            String newMessage;
             String callbackData = update.getCallbackQuery().getData();
             Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
@@ -173,67 +172,43 @@ public class TelegramBot extends TelegramLongPollingBot
             switch (callbackData)
             {
                 case "RuLang":
-                    if (botLanguage == BotLanguage.RUSSIAN)
-                        execMessage(Messages.RU_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
-                    else
-                    {
-                        newMessage = Messages.RU_FURTHER_COMMUNICATION;
-                        execMessage(newMessage, text, null);
-                        botLanguage = BotLanguage.RUSSIAN;
-                    }
+                    languageSwitching(BotLanguage.RUSSIAN, text);
                     break;
                 case "EnLang":
-                    if (botLanguage == BotLanguage.ENGLISH)
-                        execMessage(Messages.EN_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
-                    else
-                    {
-                        newMessage = Messages.EN_FURTHER_COMMUNICATION;
-                        execMessage(newMessage, text, null);
-                        botLanguage = BotLanguage.ENGLISH;
-                    }
+                    languageSwitching(BotLanguage.ENGLISH, text);
                     break;
                 case "CnLang":
-                    if (botLanguage == BotLanguage.CHINESE)
-                        execMessage(Messages.CN_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
-                    else
-                    {
-                        newMessage = Messages.CN_FURTHER_COMMUNICATION;
-                        execMessage(newMessage, text, null);
-                        botLanguage = BotLanguage.CHINESE;
-                    }
+                    languageSwitching(BotLanguage.CHINESE, text);
                     break;
                 case "DeLang":
-                    if (botLanguage == BotLanguage.GERMAN)
-                        execMessage(Messages.DE_THE_LANGUAGE_IS_ALREADY_THERE, text, null);
-                    else
-                    {
-                        newMessage = Messages.DE_FURTHER_COMMUNICATION;
-                        execMessage(newMessage, text, null);
-                        botLanguage = BotLanguage.GERMAN;
-                    }
+                    languageSwitching(BotLanguage.GERMAN, text);
                     break;
                 case "DetailedWeather":
                     execMessage(weatherMapper.detailedWeather(cityName, botLanguage), text, null);
                     return;
+                case "DetailedWeatherForecast":
+                    execMessage(weatherMapper.detailedWeatherForecast(cityName, weatherMapper.getWeatherConfig().getCurrentDay(), botLanguage),
+                            text, BotModel::getBackButton);
+                    return;
                 case "WF_1":
                     weatherMapper.getWeatherConfig().setCurrentDay(1);
-                    execMessage(weatherMapper.weatherForecastDay(cityName, 1, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
+                    execMessage(weatherMapper.weatherForecastDay(cityName, 8 - 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_2":
                     weatherMapper.getWeatherConfig().setCurrentDay(2);
-                    execMessage(weatherMapper.weatherForecastDay(cityName, 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
+                    execMessage(weatherMapper.weatherForecastDay(cityName, 2 * 8 - 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_3":
                     weatherMapper.getWeatherConfig().setCurrentDay(3);
-                    execMessage(weatherMapper.weatherForecastDay(cityName, 3, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
+                    execMessage(weatherMapper.weatherForecastDay(cityName, 3 * 8 - 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_4":
                     weatherMapper.getWeatherConfig().setCurrentDay(4);
-                    execMessage(weatherMapper.weatherForecastDay(cityName, 4, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
+                    execMessage(weatherMapper.weatherForecastDay(cityName, 4 * 8 - 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "WF_5":
                     weatherMapper.getWeatherConfig().setCurrentDay(5);
-                    execMessage(weatherMapper.weatherForecastDay(cityName, 5, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
+                    execMessage(weatherMapper.weatherForecastDay(cityName, 5 * 8 - 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "Back":
                     String weatherMessage = weatherMapper.getWeatherConfig().getWeatherMessage();
@@ -289,6 +264,28 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
+    public void languageSwitching(BotLanguage language, EditMessageText messageText)
+    {
+        if (botLanguage == language)
+            execMessage(switch (language)
+            {
+                case RUSSIAN -> Messages.RU_THE_LANGUAGE_IS_ALREADY_THERE;
+                case ENGLISH -> Messages.EN_THE_LANGUAGE_IS_ALREADY_THERE;
+                case CHINESE -> Messages.CN_THE_LANGUAGE_IS_ALREADY_THERE;
+                case GERMAN -> Messages.DE_THE_LANGUAGE_IS_ALREADY_THERE;
+            }, messageText, null);
+        else
+        {
+            execMessage(switch (language)
+            {
+                case RUSSIAN -> Messages.RU_FURTHER_COMMUNICATION;
+                case ENGLISH -> Messages.EN_FURTHER_COMMUNICATION;
+                case CHINESE -> Messages.CN_FURTHER_COMMUNICATION;
+                case GERMAN -> Messages.DE_FURTHER_COMMUNICATION;
+            }, messageText, null);
+            botLanguage = language;
+        }
+    }
     public void startCommand(long chatId, String name)
     {
         String message = "Hi, " + name + ", glad to meet you \uD83D\uDC4B\n\n" +

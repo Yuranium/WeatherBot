@@ -28,7 +28,7 @@ public class WeatherConfig
 
     private int quantityDays;
 
-    private int currentDay; // Возможно удалить
+    private int currentDay;
 
     public void setCityName(String cityName)
     {

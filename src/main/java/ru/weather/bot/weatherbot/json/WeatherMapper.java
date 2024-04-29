@@ -28,7 +28,7 @@ public class WeatherMapper
 
     private WeatherForecast weatherForecast;
 
-    private static final int MAX_DAYS = 10;
+    private static final int MAX_DAYS = 5;
 
     private static final int MIN_DAYS = 0;
 
@@ -53,7 +53,7 @@ public class WeatherMapper
     {
         return (weatherData == null) ? null : Messages.detailedWeatherForecast(language, convertCityNameCorrectly(cityName),
                 weatherData.weather().get(0).description(), weatherData.main().temp(), weatherData.main().feels_like(), weatherData.main().temp_min(),
-                weatherData.main().temp_max(), weatherData.main().pressure(), weatherData.main().humidity(), (weatherData.visibility() / 1000D),
+                weatherData.main().temp_max(), weatherData.main().pressure(), weatherData.main().humidity(), weatherData.visibility(),
                 weatherData.wind().speed(), weatherData.wind().gust(), weatherData.wind().windGustFinding(language), weatherData.clouds().clouds());
     }
 
@@ -79,10 +79,16 @@ public class WeatherMapper
                 weatherForecast.weatherDataList().get(position - 1).wind().speed());
     }
 
-//    public String detailedWeatherForecast(String cityName, BotLanguage language) // Тест
-//    {
-//        return  (weatherForecast == null) ? null : weatherForecast.weatherDataList().get(weatherConfig.getCurrentDay() - 1).toString();
-//    }
+    public String detailedWeatherForecast(String cityName, int position, BotLanguage language)
+    {
+        return  (weatherForecast == null) ? null : Messages.detailedWeatherForecast(language, convertCityNameCorrectly(cityName),
+                weatherForecast.weatherDataList().get(position - 1).weather().get(0).description(), weatherForecast.weatherDataList().get(position - 1).main().temp(),
+                weatherForecast.weatherDataList().get(position - 1).main().feels_like(), weatherForecast.weatherDataList().get(position - 1).main().temp_min(),
+                weatherForecast.weatherDataList().get(position - 1).main().temp_max(), weatherForecast.weatherDataList().get(position - 1).main().pressure(),
+                weatherForecast.weatherDataList().get(position - 1).main().humidity(), weatherForecast.weatherDataList().get(position - 1).visibility(),
+                weatherForecast.weatherDataList().get(position - 1).wind().speed(), weatherForecast.weatherDataList().get(position - 1).wind().gust(),
+                weatherForecast.weatherDataList().get(position - 1).wind().windGustFinding(language), weatherForecast.weatherDataList().get(position - 1).clouds().clouds());
+    }
 
     private String convertCityNameCorrectly(String str)
     {
@@ -161,11 +167,12 @@ public class WeatherMapper
         try
         {
             String[] city_days = splitSpace(city);
-            if (Integer.parseInt(city_days[1]) > MAX_DAYS || Integer.parseInt(city_days[1]) <= MIN_DAYS)
+            int countDays = Integer.parseInt(city_days[1]);
+            if (countDays > MAX_DAYS || countDays <= MIN_DAYS)
                 return null;
             String urlString = weatherConfig.getForecastTemplateUrl().replace("{city name}", city_days[0])
                     .replace("{my lang}", language.getRegion()).replace("{units}", "metric")
-                    .replace("{count day}", city_days[1]).replace("{API key}", weatherConfig.getWeatherApiKey());
+                    .replace("{count day}", (countDays * 8) + "").replace("{API key}", weatherConfig.getWeatherApiKey());
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

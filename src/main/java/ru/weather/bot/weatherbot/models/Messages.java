@@ -33,7 +33,7 @@ public interface Messages
                     "\n\n\uD83D\uDD25 Максимальная температура: <b>" + temp_max + "°C</b>" +
                     "\n\n\uD83D\uDDDC Давление: <b>" + (pressure * 0.75) + " мм рт. ст.</b>" +
                     "\n\n\uD83D\uDCA6 Влажность: <b>" + humidity + "%</b>" +
-                    "\n\n\uD83D\uDD2D Видимость: <b>" + visibility + "км</b>" +
+                    "\n\n\uD83D\uDD2D Видимость: <b>" + (visibility / 1000D) + "км</b>" +
                     "\n\n\uD83D\uDCA8 Скорость ветра: <b>" + speed + "м/c</b>" +
                     "\n\n\uD83C\uDF2C Порывы ветра (кратковременное усиление ветра): <b>" + gust + "м/с</b>" +
                     "\n\n\uD83E\uDDED Направление ветра: <b>" + windDirection + "</b>" +
@@ -46,7 +46,7 @@ public interface Messages
                     "\n\n\uD83D\uDD25 Maximum temperature: <b>" + temp_max + "°C</b>" +
                     "\n\n\uD83D\uDDDC Pressure: <b>" + (pressure * 0.75) + " mmHg</b>" +
                     "\n\n\uD83D\uDCA6 Humidity: <b>" + humidity + "%</b>" +
-                    "\n\n\uD83D\uDD2D Visibility: <b>" + visibility + "km</b>" +
+                    "\n\n\uD83D\uDD2D Visibility: <b>" + (visibility / 1000D) + "km</b>" +
                     "\n\n\uD83D\uDCA8 Wind speed: <b>" + speed + "m/sec</b>" +
                     "\n\n\uD83C\uDF2C Wind gusts (short-term wind strengthening): <b>" + gust + "m/sec</b>" +
                     "\n\n\uD83E\uDDED Wind direction: <b>" + windDirection + "</b>" +
@@ -59,7 +59,7 @@ public interface Messages
                     "\n\n\uD83D\uDD25 最高气温： <b>" + temp_max + "°C</b>" +
                     "\n\n\uD83D\uDDDC 气压： <b>" + (pressure * 0.75) + " mmHg。</b>" +
                     "\n\n\uD83D\uDCA6 湿度： <b>" + humidity + "%</b>" +
-                    "\n\n\uD83D\uDD2D 能见度： <b>" + visibility + "公里</b>" +
+                    "\n\n\uD83D\uDD2D 能见度： <b>" + (visibility / 1000D) + "公里</b>" +
                     "\n\n\uD83D\uDCA8 风速： <b>" + speed + "米/秒。</b>" +
                     "\n\n\uD83C\uDF2C 阵风（短期风力增强）： <b>" + gust + "米/秒。</b>" +
                     "\n\n\uD83E\uDDED 风向： <b>" + windDirection + "</b>" +
@@ -72,7 +72,7 @@ public interface Messages
                     "\n\n\uD83D\uDD25 Höchsttemperatur: <b>" + temp_max + "°C</b>" +
                     "\n\n\uD83D\uDDDC Luftdruck: <b>" + (pressure * 0.75) + " mmHg</b>" +
                     "\n\n\uD83D\uDCA6 Luftfeuchtigkeit: <b>" + humidity + "%</b>" +
-                    "\n\n\uD83D\uDD2D Sichtweite: <b>" + visibility + "km</b>" +
+                    "\n\n\uD83D\uDD2D Sichtweite: <b>" + (visibility / 1000D) + "km</b>" +
                     "\n\n\uD83D\uDCA8 Windgeschwindigkeit: <b>" + speed + "m/sec</b>" +
                     "\n\n\uD83C\uDF2C Windböen (kurzfristige Windverstärkung): <b>" + gust + "m/sec</b>" +
                     "\n\n\uD83E\uDDED Windrichtung: <b>" + windDirection + "</b>" +
