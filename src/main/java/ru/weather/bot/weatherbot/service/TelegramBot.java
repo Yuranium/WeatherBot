@@ -2,7 +2,7 @@ package ru.weather.bot.weatherbot.service;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -25,7 +25,7 @@ import ru.weather.bot.weatherbot.models.Messages;
 import java.io.File;
 import java.util.List;
 
-@Component
+@Service
 public class TelegramBot extends TelegramLongPollingBot
 {
     private final BotConfig botConfig;
