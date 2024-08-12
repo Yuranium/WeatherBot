@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -24,21 +25,24 @@ import ru.weather.bot.weatherbot.models.Messages;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 public class TelegramBot extends TelegramLongPollingBot
 {
     private final BotConfig botConfig;
     private final WeatherMapper weatherMapper;
+    private final StackMessages stackMessages;
     private BotLanguage botLanguage;
     private BotCommand botCommand;
 
     @Autowired
-    public TelegramBot(BotConfig botConfig, WeatherMapper weatherMapper) throws TelegramApiException
+    public TelegramBot(BotConfig botConfig, WeatherMapper weatherMapper, StackMessages stackMessages) throws TelegramApiException
     {
         super(botConfig.getBotToken());
         this.botConfig = botConfig;
         this.weatherMapper = weatherMapper;
+        this.stackMessages = stackMessages;
         botLanguage = BotLanguage.ENGLISH;
         execute(new SetMyCommands(BotModel.commandListForBotMenu(), new BotCommandScopeDefault(), null));
     }
@@ -185,7 +189,7 @@ public class TelegramBot extends TelegramLongPollingBot
                     languageSwitching(BotLanguage.GERMAN, text);
                     break;
                 case "DetailedWeather":
-                    execMessage(weatherMapper.detailedWeather(cityName, botLanguage), text, null);
+                    execMessage(weatherMapper.detailedWeather(cityName, botLanguage), text, BotModel::getBackButton);
                     return;
                 case "DetailedWeatherForecast":
                     execMessage(weatherMapper.detailedWeatherForecast(cityName, weatherMapper.getWeatherConfig().getCurrentDay(), botLanguage),
@@ -212,8 +216,8 @@ public class TelegramBot extends TelegramLongPollingBot
                     execMessage(weatherMapper.weatherForecastDay(cityName, 5 * 8 - 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "Back":
-                    String weatherMessage = weatherMapper.getWeatherConfig().getWeatherMessage();
-                    execMessage(weatherMessage, text, () -> BotModel.getButtonsForecastWeather(weatherMapper.getWeatherConfig().getQuantityDays()));
+                    //String weatherMessage = weatherMapper.getWeatherConfig().getWeatherMessage();
+                    backMessage(/*weatherMessage, */stackMessages.pop());
                     return;
                 default:
                     defaultCommand(chatId);
@@ -223,19 +227,31 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
-    private void execMessage(String text, @NotNull EditMessageText messageText, EditMessage message)
+    private void backMessage(@NotNull BotApiMethod<?> message) // todo убрать
+    {
+        try
+        {
+            execute((EditMessageText) message);
+        } catch (TelegramApiException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void execMessage(String text, @NotNull EditMessageText messageText, Supplier<List<List<InlineKeyboardButton>>> message)
     {
         messageText.setText(text);
         messageText.setParseMode(ParseMode.HTML);
         if (message != null)
         {
             var markup = new InlineKeyboardMarkup();
-            List<List<InlineKeyboardButton>> rows = message.getButton();
+            List<List<InlineKeyboardButton>> rows = message.get();
             markup.setKeyboard(rows);
             messageText.setReplyMarkup(markup);
         }
         try
         {
+            stackMessages.push(messageText);
             execute(messageText);
         } catch (TelegramApiException e)
         {
@@ -243,7 +259,7 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
-    private void executeMessage(long chatId, String text, EditMessage message)
+    private void executeMessage(long chatId, String text, Supplier<List<List<InlineKeyboardButton>>> message)
     {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
@@ -252,9 +268,10 @@ public class TelegramBot extends TelegramLongPollingBot
         if (message != null)
         {
             var markup = new InlineKeyboardMarkup();
-            List<List<InlineKeyboardButton>> rows = message.getButton();
+            List<List<InlineKeyboardButton>> rows = message.get();
             markup.setKeyboard(rows);
             sendMessage.setReplyMarkup(markup);
+            stackMessages.push(sendMessage);
         }
         try
         {
