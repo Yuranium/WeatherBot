@@ -1,10 +1,10 @@
 package ru.weather.bot.weatherbot.service;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -216,8 +216,15 @@ public class TelegramBot extends TelegramLongPollingBot
                     execMessage(weatherMapper.weatherForecastDay(cityName, 5 * 8 - 2, botLanguage), text, () -> BotModel.buttonWF(botLanguage));
                     return;
                 case "Back":
+                    if (stackMessages.isEmpty() || stackMessages.size() <= 0)
+                    {
+                        executeMessage(chatId, unsuccessfulEvent, null);
+                        return;
+                    }
+                    SendMessage message = stackMessages.pop();
+                    text.setReplyMarkup((InlineKeyboardMarkup) message.getReplyMarkup());
                     //String weatherMessage = weatherMapper.getWeatherConfig().getWeatherMessage();
-                    backMessage(/*weatherMessage, */stackMessages.pop());
+                    execMessage(message.getText(), text, null);
                     return;
                 default:
                     defaultCommand(chatId);
@@ -227,17 +234,7 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
-    private void backMessage(@NotNull BotApiMethod<?> message) // todo убрать
-    {
-        try
-        {
-            execute((EditMessageText) message);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
+    @SneakyThrows
     private void execMessage(String text, @NotNull EditMessageText messageText, Supplier<List<List<InlineKeyboardButton>>> message)
     {
         messageText.setText(text);
@@ -249,16 +246,10 @@ public class TelegramBot extends TelegramLongPollingBot
             markup.setKeyboard(rows);
             messageText.setReplyMarkup(markup);
         }
-        try
-        {
-            stackMessages.push(messageText);
-            execute(messageText);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
+        execute(messageText);
     }
 
+    @SneakyThrows
     private void executeMessage(long chatId, String text, Supplier<List<List<InlineKeyboardButton>>> message)
     {
         SendMessage sendMessage = new SendMessage();
@@ -273,13 +264,7 @@ public class TelegramBot extends TelegramLongPollingBot
             sendMessage.setReplyMarkup(markup);
             stackMessages.push(sendMessage);
         }
-        try
-        {
-            execute(sendMessage);
-        } catch (TelegramApiException e)
-        {
-            throw new RuntimeException(e);
-        }
+        execute(sendMessage);
     }
 
     public void languageSwitching(BotLanguage language, EditMessageText messageText)
