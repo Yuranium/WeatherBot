@@ -1,6 +1,7 @@
 package ru.weather.bot.weatherbot.service;
 
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 @Service
 public class StackMessages
 {
-    private final List<SendMessage> messages;
+    private final List<BotApiMethod<?>> messages;
 
     private int top;
 
@@ -20,13 +21,13 @@ public class StackMessages
         top = -1;
     }
 
-    public boolean push(SendMessage message)
+    public boolean push(BotApiMethod<?> message)
     {
         messages.add(++top, message);
         return true;
     }
 
-    public SendMessage pop()
+    public BotApiMethod<?> pop()
     {
         if (messages.isEmpty())
             throw new EmptyStackException();
