@@ -1,6 +1,7 @@
 package ru.weather.bot.weatherbot.config;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -22,30 +23,15 @@ public class WeatherConfig
     @Value("${weather-map.url.template}")
     private String mapTemplateUrl;
 
+    @Setter
     private String cityName;
 
+    @Setter
     private String weatherMessage;
 
+    @Setter
     private int quantityDays;
 
+    @Setter
     private int currentDay;
-
-    public void setCityName(String cityName)
-    {
-        this.cityName = cityName;
-    }
-
-    public void setWeatherMessage(String weatherMessage) {
-        this.weatherMessage = weatherMessage;
-    }
-
-    public void setQuantityDays(int quantityDays)
-    {
-        this.quantityDays = quantityDays;
-    }
-
-    public void setCurrentDay(int currentDay)
-    {
-        this.currentDay = currentDay;
-    }
 }
