@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,6 +27,7 @@ import ru.weather.bot.weatherbot.models.BotModel;
 import ru.weather.bot.weatherbot.models.Messages;
 
 import java.io.File;
+import java.util.Deque;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -34,14 +36,14 @@ public class TelegramBot extends TelegramLongPollingBot
 {
     private final BotConfig botConfig;
     private final WeatherMapper weatherMapper;
-    private final StackMessages stackMessages;
+    private final Deque<BotApiMethod<?>> stackMessages;
     private final ReceiveData receiveData;
     private final ProcessingData processingData;
     private BotLanguage botLanguage;
     private BotCommand botCommand;
 
     @Autowired
-    public TelegramBot(BotConfig botConfig, WeatherMapper weatherMapper, StackMessages stackMessages,
+    public TelegramBot(BotConfig botConfig, WeatherMapper weatherMapper, Deque<BotApiMethod<?>> stackMessages,
                        ReceiveData receiveData, ProcessingData processingData) throws TelegramApiException
     {
         super(botConfig.getBotToken());
@@ -217,18 +219,22 @@ public class TelegramBot extends TelegramLongPollingBot
                     execMessage(weatherMapper.weatherForecastDay(cityName, 8 - 2, botLanguage), text, BotModel::buttonWF);
                     return;
                 case "WF_2":
+                    stackMessages.push(stackMessages.peek());
                     receiveData.getWeatherConfig().setCurrentDay(2);
                     execMessage(weatherMapper.weatherForecastDay(cityName, 2 * 8 - 2, botLanguage), text, BotModel::buttonWF);
                     return;
                 case "WF_3":
+                    stackMessages.push(stackMessages.peek());
                     receiveData.getWeatherConfig().setCurrentDay(3);
                     execMessage(weatherMapper.weatherForecastDay(cityName, 3 * 8 - 2, botLanguage), text, BotModel::buttonWF);
                     return;
                 case "WF_4":
+                    stackMessages.push(stackMessages.peek());
                     receiveData.getWeatherConfig().setCurrentDay(4);
                     execMessage(weatherMapper.weatherForecastDay(cityName, 4 * 8 - 2, botLanguage), text, BotModel::buttonWF);
                     return;
                 case "WF_5":
+                    stackMessages.push(stackMessages.peek());
                     receiveData.getWeatherConfig().setCurrentDay(5);
                     execMessage(weatherMapper.weatherForecastDay(cityName, 5 * 8 - 2, botLanguage), text, BotModel::buttonWF);
                     return;
