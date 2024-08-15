@@ -34,9 +34,22 @@ public class StackMessages
         return messages.get(top--);
     }
 
+    public BotApiMethod<?> peek()
+    {
+        if (messages.isEmpty())
+            throw new EmptyStackException();
+        return messages.get(top);
+    }
+
+    public void clear()
+    {
+        messages.clear();
+        top = -1;
+    }
+
     public int size()
     {
-        return messages.size();
+        return top;
     }
 
     public boolean isEmpty()

@@ -9,6 +9,7 @@ import java.util.List;
 
 public class BotModel
 {
+    public static BotLanguage language;
     public static List<List<InlineKeyboardButton>> getRowsForScreenButton()
     {
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
@@ -88,7 +89,7 @@ public class BotModel
         return rows;
     }
 
-    public static List<List<InlineKeyboardButton>> buttonWF(BotLanguage language)
+    public static List<List<InlineKeyboardButton>> buttonWF()
     {
         List<List<InlineKeyboardButton>> rows = getButtonForDetailedWeather(language, "DetailedWeatherForecast");
         rows.addAll(getBackButton());
@@ -100,7 +101,13 @@ public class BotModel
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         List<InlineKeyboardButton> row = new ArrayList<>();
         var button = new InlineKeyboardButton();
-        button.setText("Назад");
+        button.setText(switch (language)
+        {
+            case RUSSIAN -> "Назад";
+            case ENGLISH -> "Back";
+            case CHINESE -> "向后";
+            case GERMAN -> "Zurückgehen";
+        });
         button.setCallbackData("Back");
         row.add(button);
         rows.add(row);

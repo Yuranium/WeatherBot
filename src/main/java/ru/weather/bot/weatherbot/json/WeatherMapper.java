@@ -60,8 +60,6 @@ public class WeatherMapper
              return null;
         else
         {
-            for (WeatherData data : weatherForecast.weatherDataList())
-                System.out.println(data);
             String[] city_days = processingData.splitSpace(cityName);
             return Messages.weatherForecastGeneralInfo(language, processingData.convertCityNameCorrectly(city_days[0]), Integer.parseInt(city_days[1]));
         }
