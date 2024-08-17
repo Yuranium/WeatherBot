@@ -241,7 +241,7 @@ public class TelegramBot extends TelegramLongPollingBot
         else
         {
             String[] city_days = processingData.splitSpace(message.toLowerCase());
-            receiveData.getWeatherConfig().setWeatherMessage(weather);
+            // receiveData.getWeatherConfig().setWeatherMessage(weather);
             receiveData.getWeatherConfig().setQuantityDays(Integer.parseInt(city_days[1]));
             receiveData.getWeatherConfig().setCityName(city_days[0]);
             sendMessage.setText(weather);
@@ -312,7 +312,7 @@ public class TelegramBot extends TelegramLongPollingBot
 
     private void languageSwitching(BotLanguage language, EditMessageText messageText)
     {
-        if (botLanguage == language)
+        if (botLanguage == language && !botCommand.getCommand().equals(BotCommand.START.getCommand()))
             editMessage(switch (language)
             {
                 case RUSSIAN -> Messages.RU_THE_LANGUAGE_IS_ALREADY_THERE;
