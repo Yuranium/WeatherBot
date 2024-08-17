@@ -105,8 +105,6 @@ public class TelegramBot extends TelegramLongPollingBot
                 return;
             }
             callBackEvent(text, callbackData, unsuccessfulEvent, chatId);
-            if (botCommand != null && botCommand.getCommand().equals(BotCommand.START.getCommand()))
-                botCommand.helpCommand(this, chatId, botLanguage);
         }
     }
 
@@ -138,40 +136,43 @@ public class TelegramBot extends TelegramLongPollingBot
                 return;
             case "WF_1":
                 stackMessages.push(stackMessages.peek());
-                receiveData.getWeatherConfig().setCurrentDay(1);
+                receiveData.getWeatherConfig().setCurrentDay(6);
                 editMessage(weatherMapper.weatherForecastDay(cityName, 8 - 2, botLanguage), editText, BotModel::buttonWF);
                 return;
             case "WF_2":
                 stackMessages.push(stackMessages.peek());
-                receiveData.getWeatherConfig().setCurrentDay(2);
+                receiveData.getWeatherConfig().setCurrentDay(14);
                 editMessage(weatherMapper.weatherForecastDay(cityName, 2 * 8 - 2, botLanguage), editText, BotModel::buttonWF);
                 return;
             case "WF_3":
                 stackMessages.push(stackMessages.peek());
-                receiveData.getWeatherConfig().setCurrentDay(3);
+                receiveData.getWeatherConfig().setCurrentDay(22);
                 editMessage(weatherMapper.weatherForecastDay(cityName, 3 * 8 - 2, botLanguage), editText, BotModel::buttonWF);
                 return;
             case "WF_4":
                 stackMessages.push(stackMessages.peek());
-                receiveData.getWeatherConfig().setCurrentDay(4);
+                receiveData.getWeatherConfig().setCurrentDay(30);
                 editMessage(weatherMapper.weatherForecastDay(cityName, 4 * 8 - 2, botLanguage), editText, BotModel::buttonWF);
                 return;
             case "WF_5":
                 stackMessages.push(stackMessages.peek());
-                receiveData.getWeatherConfig().setCurrentDay(5);
+                receiveData.getWeatherConfig().setCurrentDay(38);
                 editMessage(weatherMapper.weatherForecastDay(cityName, 5 * 8 - 2, botLanguage), editText, BotModel::buttonWF);
                 return;
             case "Back":
-                if (stackMessages.isEmpty()) {
+                if (stackMessages.isEmpty())
+                {
                     executeMessage(createMessage(chatId, unsuccessfulEvent), null);
                     return;
                 }
-                if (stackMessages.peek() instanceof SendMessage) {
+                if (stackMessages.peek() instanceof SendMessage)
+                {
                     SendMessage send = (SendMessage) stackMessages.pop();
                     editText.setReplyMarkup((InlineKeyboardMarkup) send.getReplyMarkup());
                     editMessage(send.getText(), editText, null);
                     return;
-                } else if (stackMessages.peek() instanceof EditMessageText) {
+                } else if (stackMessages.peek() instanceof EditMessageText)
+                {
                     EditMessageText send = (EditMessageText) stackMessages.pop();
                     editText.setReplyMarkup(send.getReplyMarkup());
                     editMessage(send.getText(), editText, null);
@@ -180,6 +181,8 @@ public class TelegramBot extends TelegramLongPollingBot
             default:
                 botCommand.defaultCommand(this, chatId, botLanguage);
         }
+        if (botCommand != null && botCommand.getCommand().equals(BotCommand.START.getCommand()))
+            botCommand.helpCommand(this, chatId, botLanguage);
     }
 
     public void weatherRequest(SendMessage sendMessage, String message, long chatId)
@@ -195,7 +198,7 @@ public class TelegramBot extends TelegramLongPollingBot
             executePhoto(message, chatId, input_error);
         else
         {
-            if (message.contains("/"))
+            if (message.startsWith("/"))
                 botCommand.defaultCommand(this, chatId, botLanguage);
             else
             {
