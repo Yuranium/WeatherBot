@@ -18,7 +18,8 @@ public enum BotCommand
     public void startCommand(TelegramBot telegramBot, long chatId, String name)
     {
         String message = "Hi, " + name + ", glad to meet you \uD83D\uDC4B\n\n" +
-                "❗✋ Before you work with me further, choose the right language to communicate in. ✋❗";
+                "❗✋ Before you work with me further, choose the right language to communicate in. " +
+                "The default communication language is English. ✋❗";
         telegramBot.executeMessage(createMessage(chatId, message), BotModel::getRowsForScreenButton);
     }
 
@@ -43,6 +44,7 @@ public enum BotCommand
             case CHINESE -> Messages.SET_LANG_CN;
             case GERMAN -> Messages.SET_LANG_DE;
         };
+        BotModel.language = language;
         telegramBot.executeMessage(createMessage(chatId, message), BotModel::getRowsForScreenButton);
     }
 

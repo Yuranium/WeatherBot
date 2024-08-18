@@ -5,17 +5,15 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.weather.bot.weatherbot.Observer;
 import ru.weather.bot.weatherbot.enums.BotCommand;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
 import ru.weather.bot.weatherbot.models.Messages;
 
 @Component
-public class DefaultCommand implements CommandHandler, Observer
+public class DefaultCommand implements CommandHandler
 {
-    private BotLanguage language;
     @Override
-    public BotApiMethod<?> processCommand(Update update)
+    public BotApiMethod<?> processCommand(Update update, BotLanguage language)
     {
         String message = switch (language)
         {
@@ -35,11 +33,5 @@ public class DefaultCommand implements CommandHandler, Observer
     public BotCommand currentCommand()
     {
         return BotCommand.DEFAULT;
-    }
-
-    @Override
-    public void update(BotLanguage language)
-    {
-        this.language = language;
     }
 }

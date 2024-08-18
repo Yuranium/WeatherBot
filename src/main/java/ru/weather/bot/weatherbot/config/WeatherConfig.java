@@ -27,6 +27,9 @@ public class WeatherConfig
     private String cityName;
 
     @Setter
+    private String weatherMessage;
+
+    @Setter
     private int quantityDays;
 
     @Setter

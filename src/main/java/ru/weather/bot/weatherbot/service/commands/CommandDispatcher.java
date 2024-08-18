@@ -1,10 +1,14 @@
 package ru.weather.bot.weatherbot.service.commands;
 
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.weather.bot.weatherbot.enums.BotLanguage;
+import ru.weather.bot.weatherbot.models.Messages;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +16,7 @@ import java.util.Optional;
 public class CommandDispatcher
 {
     private final List<CommandHandler> commandHandlers;
-
     private final DefaultCommand defaultCommand;
-
-    @Getter
-    private String message;
 
     @Autowired
     public CommandDispatcher(List<CommandHandler> commandHandlers, DefaultCommand defaultCommand)
@@ -25,19 +25,28 @@ public class CommandDispatcher
         this.defaultCommand = defaultCommand;
     }
 
-    public BotApiMethod<?> currentCommand(Update update)
+    public BotApiMethod<?> currentCommand(Update update, BotLanguage language)
     {
-        message = update.getMessage().getText();
-        Optional<CommandHandler> currentCommand = commandHandlers.stream()
-                .filter(command -> command.currentCommand().getCommand().equals(message))
-                .findAny();
-        if (currentCommand.isEmpty())
-            return defaultCommand.processCommand(update);
-        else return currentCommand.get().processCommand(update);
-    }
-
-    public boolean isCommand(String message)
-    {
-        return message.startsWith("/") && !message.contains(" ");
+        String text = update.getMessage().getText();
+        if (text.startsWith("/"))
+        {
+            Optional<CommandHandler> currentCommand = commandHandlers.stream()
+                    .filter(command -> command.currentCommand().getCommand().equals(text))
+                    .findAny();
+            if (currentCommand.isEmpty())
+                return defaultCommand.processCommand(update, language);
+            else return currentCommand.get().processCommand(update, language);
+        }
+        else return SendMessage.builder()
+                .chatId(update.getMessage().getChatId())
+                .text(switch (language)
+                        {
+                            case RUSSIAN -> Messages.RU_CITY_INPUT_ERROR;
+                            case ENGLISH -> Messages.EN_CITY_INPUT_ERROR;
+                            case CHINESE -> Messages.CN_CITY_INPUT_ERROR;
+                            case GERMAN -> Messages.DE_CITY_INPUT_ERROR;
+                        })
+                .parseMode(ParseMode.HTML)
+                .build();
     }
 }
