@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.weather.bot.weatherbot.Observer;
 import ru.weather.bot.weatherbot.config.WeatherConfig;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
 import ru.weather.bot.weatherbot.models.Messages;
@@ -19,15 +20,19 @@ import java.net.URL;
 import java.util.Scanner;
 
 @Component
-public class WeatherMapper
+public class WeatherMapper implements Observer
 {
+    @Getter
     private final ReceiveData receiveData;
 
+    @Getter
     private final ProcessingData processingData;
 
     private WeatherData weatherData;
 
     private WeatherForecast weatherForecast;
+
+    private BotLanguage language;
 
     @Autowired
     public WeatherMapper(ReceiveData receiveData, ProcessingData processingData)
@@ -36,7 +41,7 @@ public class WeatherMapper
         this.processingData = processingData;
     }
 
-    public String weatherDispatch(String cityName, BotLanguage language)
+    public String weatherDispatch(String cityName)
     {
         weatherData = receiveData.fetchWeather(cityName, language);
 
@@ -45,7 +50,7 @@ public class WeatherMapper
                 weatherData.clouds().clouds(), weatherData.wind().speed());
     }
 
-    public String detailedWeather(String cityName, BotLanguage language)
+    public String detailedWeather(String cityName)
     {
         return (weatherData == null) ? null : Messages.detailedWeatherForecast(language, processingData.convertCityNameCorrectly(cityName),
                 weatherData.weather().get(0).description(), weatherData.main().temp(), weatherData.main().feels_like(), weatherData.main().temp_min(),
@@ -53,7 +58,7 @@ public class WeatherMapper
                 weatherData.wind().speed(), weatherData.wind().gust(), weatherData.wind().windGustFinding(language), weatherData.clouds().clouds());
     }
 
-    public String weatherForecastDispatch(String cityName, BotLanguage language)
+    public String weatherForecastDispatch(String cityName)
     {
         weatherForecast = receiveData.fetchWeatherForecast(cityName, language);
         if (weatherForecast == null)
@@ -65,7 +70,7 @@ public class WeatherMapper
         }
     }
 
-    public String weatherForecastDay(String cityName, int position, BotLanguage language)
+    public String weatherForecastDay(String cityName, int position)
     {
         return (weatherForecast == null) ? null : Messages.weatherForecast(language, processingData.convertCityNameCorrectly(cityName),
                 weatherForecast.weatherDataList().get(position - 1).weather().get(0).description(), weatherForecast.weatherDataList().get(position - 1).main().temp(),
@@ -73,7 +78,7 @@ public class WeatherMapper
                 weatherForecast.weatherDataList().get(position - 1).wind().speed());
     }
 
-    public String detailedWeatherForecast(String cityName, int position, BotLanguage language)
+    public String detailedWeatherForecast(String cityName, int position)
     {
         return  (weatherForecast == null) ? null : Messages.detailedWeatherForecast(language, processingData.convertCityNameCorrectly(cityName),
                 weatherForecast.weatherDataList().get(position - 1).weather().get(0).description(), weatherForecast.weatherDataList().get(position - 1).main().temp(),
@@ -82,5 +87,11 @@ public class WeatherMapper
                 weatherForecast.weatherDataList().get(position - 1).main().humidity(), weatherForecast.weatherDataList().get(position - 1).visibility(),
                 weatherForecast.weatherDataList().get(position - 1).wind().speed(), weatherForecast.weatherDataList().get(position - 1).wind().gust(),
                 weatherForecast.weatherDataList().get(position - 1).wind().windGustFinding(language), weatherForecast.weatherDataList().get(position - 1).clouds().clouds());
+    }
+
+    @Override
+    public void update(BotLanguage language)
+    {
+        this.language = language;
     }
 }

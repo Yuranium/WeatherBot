@@ -7,6 +7,6 @@ import ru.weather.bot.weatherbot.enums.BotLanguage;
 
 public interface CommandHandler
 {
-    BotApiMethod<?> processCommand(Update update, BotLanguage language);
+    BotApiMethod<?> processCommand(Update update);
     BotCommand currentCommand();
 }
