@@ -1,7 +1,20 @@
+# Project
 spring.application.name=
+
+# TelegramBot
 bot.name=
 bot.token=
+
+# OpenWeatherMap
 weather.api.key=
 weather.url.template=http://api.openweathermap.org/data/2.5/weather?q={city name}&lang={my lang}&units={units}&appid={API key}
 weather-forecast.url.template=http://api.openweathermap.org/data/2.5/forecast?q={city name}&lang={my lang}&units={units}&cnt={count day}&appid={API key}
 weather-map.url.template=https://tile.openweathermap.org/map/{layer}/{z}/{x}/{y}.png?appid={API key}
+
+# Database
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.show-sql=true
+spring.jpa.open-in-view=false

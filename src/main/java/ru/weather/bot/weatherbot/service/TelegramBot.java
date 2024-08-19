@@ -20,11 +20,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.weather.bot.weatherbot.config.BotConfig;
 import ru.weather.bot.weatherbot.enums.BotCommand;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
+import ru.weather.bot.weatherbot.enums.ClientRole;
 import ru.weather.bot.weatherbot.json.ProcessingData;
 import ru.weather.bot.weatherbot.json.ReceiveData;
 import ru.weather.bot.weatherbot.json.WeatherMapper;
 import ru.weather.bot.weatherbot.models.BotModel;
 import ru.weather.bot.weatherbot.models.Messages;
+import ru.weather.bot.weatherbot.models.database.ClientService;
 
 import java.io.File;
 import java.util.Deque;
@@ -41,12 +43,13 @@ public class TelegramBot extends TelegramLongPollingBot
     private final Deque<BotApiMethod<?>> stackMessages;
     private final ReceiveData receiveData;
     private final ProcessingData processingData;
+    private final ClientService service;
     private BotLanguage botLanguage;
     private BotCommand botCommand;
 
     @Autowired
     public TelegramBot(BotConfig botConfig, WeatherMapper weatherMapper, Deque<BotApiMethod<?>> stackMessages,
-                       ReceiveData receiveData, ProcessingData processingData) throws TelegramApiException
+                       ReceiveData receiveData, ProcessingData processingData, ClientService service) throws TelegramApiException
     {
         super(botConfig.getBotToken());
         this.botConfig = botConfig;
@@ -54,6 +57,7 @@ public class TelegramBot extends TelegramLongPollingBot
         this.stackMessages = stackMessages;
         this.receiveData = receiveData;
         this.processingData = processingData;
+        this.service = service;
         botLanguage = BotLanguage.ENGLISH;
         execute(new SetMyCommands(BotModel.commandListForBotMenu(), new BotCommandScopeDefault(), null));
     }
@@ -79,7 +83,7 @@ public class TelegramBot extends TelegramLongPollingBot
                 executeMessage(createMessage(chatId, Messages.EN_UNSUCCESSFUL_RELOAD_EVENT_HANDLING), null);
                 return;
             }
-            if (!existCommand(message, chatId, update.getMessage().getChat().getFirstName()))
+            if (!existCommand(update))
                 weatherRequest(sendMessage, message, chatId);
         } else if (update.hasCallbackQuery())
         {
@@ -209,13 +213,16 @@ public class TelegramBot extends TelegramLongPollingBot
         }
     }
 
-    public boolean existCommand(String command, long chatId, String firstName)
+    public boolean existCommand(Update update)
     {
-        return switch (command)
+        String text = update.getMessage().getText();
+        long chatId = update.getMessage().getChatId();
+        return switch (text)
         {
             case "/start":
                 botCommand = BotCommand.START;
-                botCommand.startCommand(this, chatId, firstName);
+                service.registeredClient(update);
+                botCommand.startCommand(this, chatId, update.getMessage().getChat().getFirstName());
                 yield true;
             case "/help":
                 botCommand = BotCommand.HELP;
@@ -229,7 +236,23 @@ public class TelegramBot extends TelegramLongPollingBot
                 botCommand = BotCommand.MAP;
                 botCommand.mapCommand(this, chatId, botLanguage);
                 yield true;
-            default: yield false;
+            default:
+                if (text.startsWith("/send ") && service.findById(chatId).get().getRole() == ClientRole.ADMIN)
+                {
+                    service.findAll().forEach(client -> {
+                        try {
+                            sendApiMethod(SendMessage.builder()
+                                    .chatId(client.getChatId())
+                                    .text(service.sendCommandMessage(text)) // todo переписать
+                                    .parseMode(ParseMode.HTML)
+                                    .build());
+                        } catch (TelegramApiException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    yield true;
+                }
+                else yield false;
         };
     }
 
