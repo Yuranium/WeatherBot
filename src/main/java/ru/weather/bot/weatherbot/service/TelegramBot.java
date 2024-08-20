@@ -20,12 +20,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.weather.bot.weatherbot.config.BotConfig;
 import ru.weather.bot.weatherbot.enums.BotCommand;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
-import ru.weather.bot.weatherbot.enums.ClientRole;
 import ru.weather.bot.weatherbot.json.ProcessingData;
 import ru.weather.bot.weatherbot.json.ReceiveData;
 import ru.weather.bot.weatherbot.json.WeatherMapper;
 import ru.weather.bot.weatherbot.models.BotModel;
 import ru.weather.bot.weatherbot.models.Messages;
+import ru.weather.bot.weatherbot.models.database.Client;
 import ru.weather.bot.weatherbot.models.database.ClientService;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class TelegramBot extends TelegramLongPollingBot
         this.processingData = processingData;
         this.service = service;
         botLanguage = BotLanguage.ENGLISH;
-        execute(new SetMyCommands(BotModel.commandListForBotMenu(), new BotCommandScopeDefault(), null));
+        sendApiMethod(new SetMyCommands(BotModel.commandListForBotMenu(), new BotCommandScopeDefault(), null));
     }
 
     @Override
@@ -221,7 +221,7 @@ public class TelegramBot extends TelegramLongPollingBot
         {
             case "/start":
                 botCommand = BotCommand.START;
-                service.registeredClient(update);
+                service.registeredClient(update.getMessage());
                 botCommand.startCommand(this, chatId, update.getMessage().getChat().getFirstName());
                 yield true;
             case "/help":
@@ -237,23 +237,23 @@ public class TelegramBot extends TelegramLongPollingBot
                 botCommand.mapCommand(this, chatId, botLanguage);
                 yield true;
             default:
-                if (text.startsWith("/send ") && service.findById(chatId).get().getRole() == ClientRole.ADMIN)
+                if (text.startsWith("/send ") && service.isAdmin(chatId))
                 {
-                    service.findAll().forEach(client -> {
-                        try {
-                            sendApiMethod(SendMessage.builder()
-                                    .chatId(client.getChatId())
-                                    .text(service.sendCommandMessage(text)) // todo переписать
-                                    .parseMode(ParseMode.HTML)
-                                    .build());
-                        } catch (TelegramApiException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                    String message = text.substring(text.indexOf(" ") + 1);
+                    service.findAll().forEach(client -> sendEveryone(client, message));
                     yield true;
                 }
                 else yield false;
         };
+    }
+    @SneakyThrows
+    private void sendEveryone(Client client, String message)
+    {
+        sendApiMethod(SendMessage.builder()
+                .chatId(client.getChatId())
+                .text(message)
+                .parseMode(ParseMode.HTML)
+                .build());
     }
 
     public void weatherForecast(SendMessage sendMessage, String message, long chatId, String error)
@@ -264,7 +264,6 @@ public class TelegramBot extends TelegramLongPollingBot
         else
         {
             String[] city_days = processingData.splitSpace(message.toLowerCase());
-            // receiveData.getWeatherConfig().setWeatherMessage(weather);
             receiveData.getWeatherConfig().setQuantityDays(Integer.parseInt(city_days[1]));
             receiveData.getWeatherConfig().setCityName(city_days[0]);
             sendMessage.setText(weather);
@@ -317,7 +316,7 @@ public class TelegramBot extends TelegramLongPollingBot
             markup.setKeyboard(rows);
             messageText.setReplyMarkup(markup);
         }
-        execute(messageText);
+        sendApiMethod(messageText);
     }
 
     @SneakyThrows
@@ -330,7 +329,7 @@ public class TelegramBot extends TelegramLongPollingBot
             markup.setKeyboard(rows);
             sendMessage.setReplyMarkup(markup);
         }
-        execute(sendMessage);
+        sendApiMethod(sendMessage);
     }
 
     private void languageSwitching(BotLanguage language, EditMessageText messageText)

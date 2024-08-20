@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.weather.bot.weatherbot.enums.ClientRole;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Setter
 @Getter
@@ -28,7 +28,7 @@ public class Client
     private String lastName;
 
     @Column(name = "date_of_registration", nullable = false)
-    private Date dateOfRegistration;
+    private Timestamp dateOfRegistration;
 
     @Column(name = "client_role", nullable = false)
     @Enumerated(value = EnumType.STRING)

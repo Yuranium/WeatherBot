@@ -1,22 +1,9 @@
 package ru.weather.bot.weatherbot.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.weather.bot.weatherbot.config.WeatherConfig;
 import ru.weather.bot.weatherbot.enums.BotLanguage;
 import ru.weather.bot.weatherbot.models.Messages;
-
-
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
 
 @Component
 public class WeatherMapper

@@ -4,10 +4,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.weather.bot.weatherbot.enums.ClientRole;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +34,11 @@ public class ClientService
     }
 
     @Transactional
-    public void registeredClient(Update update)
+    public void registeredClient(Message message)
     {
-        Optional<Client> client = findById(update.getMessage().getChatId());
+        Optional<Client> client = findById(message.getChatId());
         if (client.isEmpty())
-            saveClient(update.getMessage());
+            saveClient(message);
     }
 
     @Transactional
@@ -49,15 +48,16 @@ public class ClientService
             .setChatId(message.getChatId())
             .setFirstName(message.getChat().getFirstName())
             .setLastName(message.getChat().getLastName())
-            .setDateOfRegistration(new Date())
+            .setDateOfRegistration(new Timestamp(System.currentTimeMillis()))
             .setRole(ClientRole.CLIENT)
             .setUserName(message.getChat().getUserName());
         repository.save(client);
-
     }
 
-    public String sendCommandMessage(String message)
+    @Transactional
+    public boolean isAdmin(long chatId)
     {
-        return message.substring(message.indexOf(" ") + 1);
+        Optional<Client> currentClient = findById(chatId);
+        return currentClient.isPresent() && currentClient.get().getRole() == ClientRole.ADMIN;
     }
 }
