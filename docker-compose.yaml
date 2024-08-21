@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16.4
+    restart: "no"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: USER
+      POSTGRES_PASSWORD: PASSWORD
+      POSTGRES_DB: DATABASE
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+  weather-bot:
+    image: spring-boot-weather
+    restart: "no"
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_HOST: postgres:5432
+    depends_on:
+      - postgres
+    labels:
+      amplicode.image: springboot
+volumes:
+  postgres_data:

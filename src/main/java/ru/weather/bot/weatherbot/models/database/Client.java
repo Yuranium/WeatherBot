@@ -34,6 +34,6 @@ public class Client
     @Enumerated(value = EnumType.STRING)
     private ClientRole role;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String userName;
 }
